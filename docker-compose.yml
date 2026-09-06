@@ -1,0 +1,176 @@
+name: projet-6tt
+
+networks:
+  game-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+
+services:
+  # ---------------------------------------------------------------------------
+  # Base de donnees PostgreSQL + pgvector
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: pgvector/pgvector:0.8.6-pg18
+    container_name: 6tt_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-game_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-game_password}
+      POSTGRES_DB: ${POSTGRES_DB:-game_db}
+    ports:
+      - "${POSTGRES_PORT:-6600}:5432"
+    volumes:
+      # PostgreSQL 18+ : le volume se monte sur /var/lib/postgresql, et non plus
+      # sur /var/lib/postgresql/data. L'image range alors les donnees dans un
+      # sous-dossier par version majeure (18/docker), ce qui permet un
+      # pg_upgrade --link sans franchir de point de montage.
+      - postgres_data:/var/lib/postgresql
+      # Scripts joues une seule fois, a la creation du volume
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - game-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-game_user} -d ${POSTGRES_DB:-game_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ---------------------------------------------------------------------------
+  # Cache & telemetrie temps reel Redis
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:8.8-alpine
+    container_name: 6tt_redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "${REDIS_PORT:-6601}:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - game-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ---------------------------------------------------------------------------
+  # Backend Go (API temps reel) - hot reload via Air
+  # ---------------------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: 6tt_backend
+    restart: unless-stopped
+    ports:
+      - "${BACKEND_PORT:-6602}:8080"
+    environment:
+      APP_ENV: development
+      HTTP_ADDR: ":8080"
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${POSTGRES_USER:-game_user}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-game_password}
+      DB_NAME: ${POSTGRES_DB:-game_db}
+      REDIS_ADDR: redis:6379
+      CORS_ORIGIN: "*"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - game-net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+
+  # ---------------------------------------------------------------------------
+  # Frontend Nuxt 3 + Tailwind CSS
+  # ---------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: 6tt_frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-6603}:3000"
+    environment:
+      # URL appelee depuis le NAVIGATEUR : port publie sur l'hote
+      NUXT_PUBLIC_API_URL: http://localhost:${BACKEND_PORT:-6602}
+      # URL appelee depuis le SSR Nuxt : nom de service sur le reseau Docker
+      NUXT_INTERNAL_API_URL: http://backend:8080
+      CHOKIDAR_USEPOLLING: "true"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.nuxt
+    depends_on:
+      backend:
+        condition: service_started
+    networks:
+      - game-net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+
+  # ---------------------------------------------------------------------------
+  # Serveur headless Godot 4 (serveur dedie 2D / WebSocket)
+  # ---------------------------------------------------------------------------
+  godot:
+    build:
+      context: ./godot
+      dockerfile: Dockerfile
+    container_name: 6tt_godot
+    restart: unless-stopped
+    ports:
+      - "${GODOT_PORT:-6604}:8999"
+    environment:
+      GAME_PORT: 8999
+      BACKEND_URL: http://backend:8080
+    volumes:
+      # Pas de volume sur /root/.local/share/godot : les templates d'export
+      # (1.3 Go) sont deja dans l'image et seraient recopies inutilement.
+      - ./godot:/project
+    depends_on:
+      backend:
+        condition: service_started
+    networks:
+      - game-net
+
+  # ---------------------------------------------------------------------------
+  # Client de jeu exporte en HTML5, servi en statique
+  # ---------------------------------------------------------------------------
+  # Le contenu vient de ./godot/build/web, produit par ./godot/export-web.sh
+  webclient:
+    image: caddy:2.11-alpine
+    container_name: 6tt_webclient
+    restart: unless-stopped
+    ports:
+      - "${WEBCLIENT_PORT:-6605}:80"
+    volumes:
+      - ./godot/build/web:/srv:ro
+      - ./godot/Caddyfile:/etc/caddy/Caddyfile:ro
+    depends_on:
+      - godot
+    networks:
+      - game-net
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/index.html"]
+      interval: 10s
+      timeout: 5s
+      retries: 6

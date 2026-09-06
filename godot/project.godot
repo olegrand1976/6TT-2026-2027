@@ -1,0 +1,31 @@
+; Projet Godot 4.7 — jeu de course 2D du projet-6TT.
+;
+; Le meme projet fournit le serveur dedie (lance en --headless dans Docker) et
+; le client (editeur ou export Web). Le role est choisi dans main.gd.
+
+config_version=5
+
+[application]
+
+config/name="projet-6TT"
+config/description="Course 2D multijoueur — serveur dedie + client Web"
+run/main_scene="res://main.tscn"
+config/features=PackedStringArray("4.7")
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[debug]
+
+file_logging/enable_file_logging=false
+
+[rendering]
+
+; WebGL2 : indispensable pour l'export Web.
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.086, 0.11, 0.145, 1)

@@ -1,0 +1,61 @@
+# Sert le client Godot exporte en HTML5.
+#
+# `auto_https off` : on ecoute en clair sur :80 derriere le port publie par
+# Docker, Caddy ne doit pas tenter d'obtenir un certificat.
+{
+	auto_https off
+	admin off
+}
+
+:80 {
+	root * /srv
+	encode gzip zstd
+
+	# Journal d'acces : permet de verifier d'un coup d'oeil si le client passe
+	# bien par /ws (docker compose logs webclient).
+	log {
+		output stdout
+		format console
+	}
+
+	# Requis par la variante « avec threads » de l'export Godot
+	# (SharedArrayBuffer). Le preset actuel est en « nothreads » et n'en a pas
+	# besoin, mais les envoyer permet de basculer sans toucher au serveur.
+	header {
+		Cross-Origin-Opener-Policy   same-origin
+		Cross-Origin-Embedder-Policy require-corp
+	}
+
+	# Environnement de dev : tout est regenere par ./godot/export-web.sh, et un
+	# index.js en cache avec un index.wasm neuf casse le chargement. On desactive
+	# donc le cache sur l'ensemble du build, pas seulement sur .pck / .wasm.
+	header Cache-Control "no-store"
+
+	# Le jeu se connecte au serveur Godot par CETTE origine, sur /ws. Le
+	# navigateur n'ouvre donc qu'un seul port (celui de la page), ce qui evite
+	# tout blocage lie a une connexion vers un autre port (extensions, HTTPS-Only
+	# Mode, politiques d'entreprise). Caddy gere l'upgrade WebSocket seul.
+	#
+	# Les en-tetes sont volontairement reduits au strict necessaire : le serveur
+	# WebSocket de Godot rejette (reset TCP) tout handshake dont les en-tetes
+	# depassent ~4 Ko. Sur une machine de dev, les cookies deposes par les autres
+	# services en localhost s'accumulent — les cookies ignorent le port — et un
+	# navigateur un peu ancien franchit la limite. Symptome : 502 apres 3 s
+	# (le timeout de handshake de Godot) et « serveur injoignable » cote client.
+	# Aucun de ces en-tetes n'a d'utilite pour le serveur de jeu.
+	@ws path /ws
+	reverse_proxy @ws godot:8999 {
+		header_up -Cookie
+		header_up -Accept-Language
+		header_up -Accept-Encoding
+		header_up -Sec-Websocket-Extensions
+		header_up -Pragma
+		header_up -Cache-Control
+		header_up -User-Agent
+		header_up -X-Forwarded-For
+		header_up -X-Forwarded-Proto
+		header_up -X-Forwarded-Host
+	}
+
+	file_server
+}

@@ -1,0 +1,20 @@
+.env
+
+# Backend Go
+backend/tmp/
+backend/backend
+
+# Frontend Nuxt
+frontend/node_modules/
+frontend/.nuxt/
+frontend/.output/
+frontend/.data/
+
+# Godot
+godot/.godot/
+godot/build/
+
+# Graphe de code local (généré par graphify)
+graphify-out/
+
+*.log

@@ -1,0 +1,108 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>projet-6TT — diagnostic WebSocket</title>
+<style>
+  body { background:#0b0e14; color:#e2e8f0; font:15px/1.6 ui-monospace,Menlo,monospace;
+         margin:0; padding:32px; }
+  h1 { font-size:18px; margin:0 0 4px; }
+  p.sub { color:#94a3b8; margin:0 0 24px; }
+  table { border-collapse:collapse; width:100%; max-width:900px; }
+  td { padding:10px 12px; border-bottom:1px solid #1c2333; vertical-align:top; }
+  td.k { color:#94a3b8; width:230px; }
+  .ok   { color:#4ade80; font-weight:bold; }
+  .ko   { color:#f87171; font-weight:bold; }
+  .wait { color:#fbbf24; }
+  #verdict { margin-top:24px; padding:16px; border-radius:8px; background:#131824;
+             max-width:900px; border-left:4px solid #2a3348; }
+</style>
+
+<h1>projet-6TT — diagnostic de connexion</h1>
+<p class="sub">Ouvrez cette page dans le navigateur qui pose probleme, puis recopiez le tableau.</p>
+
+<table id="t"></table>
+<div id="verdict" class="wait">Tests en cours…</div>
+
+<script>
+const T = document.getElementById('t');
+const results = {};
+
+function row(key, value, cls) {
+  let tr = document.getElementById('r-' + key);
+  if (!tr) {
+    tr = document.createElement('tr');
+    tr.id = 'r-' + key;
+    tr.innerHTML = '<td class="k"></td><td class="v"></td>';
+    tr.children[0].textContent = key;
+    T.appendChild(tr);
+  }
+  tr.children[1].textContent = value;
+  tr.children[1].className = 'v ' + (cls || '');
+}
+
+row('page', location.href);
+row('origine', location.origin);
+row('protocole', location.protocol);
+row('cross-origin isolated', String(window.crossOriginIsolated));
+row('SharedArrayBuffer', typeof SharedArrayBuffer === 'undefined' ? 'indisponible' : 'disponible');
+row('navigateur', navigator.userAgent);
+
+// Chaque cible est testee independamment : on saura si c'est le port qui bloque.
+const targets = [
+  ['A. meme origine  /ws',        (location.protocol === 'https:' ? 'wss' : 'ws') + '://' + location.host + '/ws'],
+  ['B. port direct 6604',         'ws://' + location.hostname + ':6604'],
+  ['C. port direct 127.0.0.1',    'ws://127.0.0.1:6604'],
+];
+
+let pending = targets.length;
+
+for (const [label, url] of targets) {
+  row(label, 'connexion a ' + url + ' …', 'wait');
+  let settled = false;
+  const done = (text, cls, key) => {
+    if (settled) return;
+    settled = true;
+    results[label] = key;
+    row(label, text + '   [' + url + ']', cls);
+    if (--pending === 0) verdict();
+  };
+
+  let ws;
+  try {
+    ws = new WebSocket(url);
+  } catch (e) {
+    done('EXCEPTION a la creation : ' + e.message, 'ko', 'throw');
+    continue;
+  }
+  ws.onopen = () => { done('OK — connexion etablie', 'ok', 'ok'); ws.close(); };
+  ws.onerror = () => done('ECHEC — connexion refusee ou bloquee', 'ko', 'error');
+  ws.onclose = (e) => done('FERME avant ouverture (code ' + e.code + ')', 'ko', 'closed');
+  setTimeout(() => done('DELAI DEPASSE (10 s, aucune reponse)', 'ko', 'timeout'), 10000);
+}
+
+function verdict() {
+  const a = results['A. meme origine  /ws'] === 'ok';
+  const b = results['B. port direct 6604'] === 'ok';
+  const v = document.getElementById('verdict');
+  let msg, cls;
+  if (a && b) {
+    msg = 'Tout fonctionne : le jeu doit se connecter. Rechargez http://' + location.host + '/';
+    cls = 'ok';
+  } else if (a && !b) {
+    msg = 'La meme origine (/ws) fonctionne, mais pas le port 6604 direct. '
+        + 'Cause la plus probable : les en-tetes de ce navigateur (cookies deposes par les '
+        + 'autres services en localhost) depassent la limite de ~4 Ko du handshake Godot. '
+        + 'Le relais /ws nettoie ces en-tetes : le jeu fonctionnera.';
+    cls = 'ok';
+  } else if (!a && b) {
+    msg = 'Le port direct passe mais pas le relais /ws : le service webclient (Caddy) '
+        + 'ne relaie pas correctement. Cote serveur a corriger.';
+    cls = 'ko';
+  } else {
+    msg = 'Aucune connexion WebSocket ne passe depuis ce navigateur. '
+        + 'Testez en navigation privee (extensions desactivees) pour confirmer.';
+    cls = 'ko';
+  }
+  v.textContent = msg;
+  v.className = cls;
+}
+</script>

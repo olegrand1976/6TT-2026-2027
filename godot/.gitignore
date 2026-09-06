@@ -1,0 +1,4 @@
+# Cache d'import Godot, regenere automatiquement
+.godot/
+# Sorties d'export
+build/
