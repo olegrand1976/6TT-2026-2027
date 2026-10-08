@@ -102,8 +102,9 @@ handshake trop lourd ; **426** si requête HTTP simple sur `/ws`, normal).
 Diagnostic : `?port=NNNN`, `/diag.html`.
 
 **Éditeur Docker (optionnel)** : `docker compose --profile editor up -d
-godot-editor` → http://localhost:6606/vnc.html. Préférer l’éditeur hôte :
-`godot --path godot -e`.
+godot-editor` → `vnc.html?autoconnect=true&resize=scale` (port 6606, `--fullscreen`).
+Préférer l’éditeur hôte : `godot --path godot -e --language fr` — install 4.7.2 :
+[godotengine.org/download/linux](https://godotengine.org/download/linux/).
 
 **Reconnexion** toutes les 3 s avec un **nouveau** `WebSocketMultiplayerPeer`.
 Signaux MultiplayerAPI branchés **une fois**, avant la première tentative.
@@ -118,7 +119,7 @@ Signaux MultiplayerAPI branchés **une fois**, avant la première tentative.
 - `go.sum` sans Go hôte :
   `docker run --rm -v "$PWD":/app -w /app golang:1.27.1-alpine go mod tidy`
   (depuis `backend/`).
-- Éditeur hôte : `godot --path godot -e` (`~/.local/bin/godot`) — **sans**
+- Éditeur hôte : `godot --path godot -e --language fr` (`~/.local/bin/godot`) — **sans**
   templates d’export.
 
 ## Vérifier que la stack tourne

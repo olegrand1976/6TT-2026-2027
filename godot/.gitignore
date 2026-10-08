@@ -2,3 +2,5 @@
 .godot/
 # Sorties d'export
 build/
+# Prefs editeur noVNC (profil Docker editor)
+.docker/

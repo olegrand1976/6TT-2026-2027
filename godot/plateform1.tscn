@@ -1,18 +1,19 @@
-[gd_scene format=3 uid="uid://crn5br18ctoy1"]
+[gd_scene format=3 uid="uid://bxx7boukj86xb"]
 
-[ext_resource type="Script" uid="uid://p8surmoph4rk" path="res://main.gd" id="1_main"]
-[ext_resource type="Texture2D" uid="uid://by3lacstnnt7g" path="res://ground.png" id="2_0xm2m"]
+[ext_resource type="Script" uid="uid://p8surmoph4rk" path="res://main.gd" id="1_h4yel"]
+[ext_resource type="Texture2D" uid="uid://by3lacstnnt7g" path="res://ground.png" id="2_whblh"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_akiqj"]
 size = Vector2(40, 39)
 
 [node name="Niveau" type="Node" unique_id=997062852]
-script = ExtResource("1_main")
+script = ExtResource("1_h4yel")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=787526097]
 position = Vector2(692, 370)
-texture = ExtResource("2_0xm2m")
+texture = ExtResource("2_whblh")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D" unique_id=584221107]
 position = Vector2(10, 9.5)
 shape = SubResource("RectangleShape2D_akiqj")
+debug_color = Color(0.42028174, 0.48463732, 0.93754244, 0.41960785)

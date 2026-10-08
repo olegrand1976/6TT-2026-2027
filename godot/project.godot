@@ -1,7 +1,10 @@
-; Projet Godot 4.7 — jeu de course 2D du projet-6TT.
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
 ;
-; Le meme projet fournit le serveur dedie (lance en --headless dans Docker) et
-; le client (editeur ou export Web). Le role est choisi dans main.gd.
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
 
 config_version=5
 
@@ -19,13 +22,8 @@ window/size/viewport_height=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
-[debug]
-
-file_logging/enable_file_logging=false
-
 [rendering]
 
-; WebGL2 : indispensable pour l'export Web.
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 environment/defaults/default_clear_color=Color(0.086, 0.11, 0.145, 1)

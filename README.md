@@ -52,8 +52,8 @@ Service **optionnel** (noVNC + Xvfb, dev labo uniquement) :
 docker compose --profile editor up -d godot-editor
 ```
 
-Puis http://localhost:6606/vnc.html — même projet monté que le serveur (`./godot`).
-L’éditeur natif reste préférable : `godot --path godot -e`.
+Puis http://localhost:6606/vnc.html?autoconnect=true&resize=scale (éditeur plein
+écran). Install local : [Guide élèves §3](docs/GUIDE-ELEVES.md#3-démarrage) (Godot 4.7.2).
 
 ---
 
@@ -131,7 +131,7 @@ Main → Net (toujours) + Server | Client
 
 - Autorité serveur : `submit_input` → simulation → `snapshot` (30 Hz).
 - Après modif jeu : `./godot/export-web.sh`
-- Éditeur hôte : `godot --path godot -e` (sans templates d’export)
+- Éditeur hôte : `godot --path godot -e --language fr` (sans templates d’export)
 
 Pièges WebSocket, nœud `Net`, reconnexion → [Guide élèves §9 et §12](docs/GUIDE-ELEVES.md#9-le-jeu-godot-en-détail).
 

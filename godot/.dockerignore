@@ -1,0 +1,4 @@
+# Volumes montes au runtime — ne pas copier dans l'image (build context).
+.docker/
+.godot/
+build/

@@ -167,8 +167,14 @@ services:
       - "${GODOT_EDITOR_PORT:-6606}:6080"
     environment:
       NOVNC_PORT: "6080"
+      EDITOR_HOME: /editor-home
+      HOST_UID: ${HOST_UID:-1000}
+      HOST_GID: ${HOST_GID:-1000}
+      # Verrou numerique X11 : on | off | toggle (defaut on = pave numerique chiffres)
+      EDITOR_NUMLOCK: ${EDITOR_NUMLOCK:-on}
     volumes:
       - ./godot:/project
+      - ./godot/.docker/editor-home:/editor-home
     depends_on:
       - godot
     networks:

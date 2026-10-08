@@ -119,25 +119,57 @@ Ensuite :
 | http://localhost:6603 | Dashboard — bandeau **STACK OPERATIONNELLE** |
 | http://localhost:6605 | Jouer (flèches) — plusieurs onglets = multi |
 | http://localhost:6605/diag.html | Diagnostic WebSocket (proxy vs direct) |
-| http://localhost:6606/vnc.html | Éditeur Godot via noVNC (profil `editor`, voir ci-dessous) |
+| http://localhost:6606/vnc.html?autoconnect=true&resize=scale | Éditeur Godot noVNC plein écran (profil `editor`) |
 
-Éditeur Godot sur la machine (recommandé) :
+### Installer Godot 4.7.2 en local (Linux, recommandé)
 
-```bash
-godot --path godot -e     # binaire typique : ~/.local/bin/godot (4.7.2)
-```
+Version **identique** au conteneur (`barichello/godot-ci:4.7.2`) :
 
-Le serveur Docker continue de tourner : F5 dans l’éditeur se connecte comme un
-client de plus (`ws://127.0.0.1:6604`).
+1. **Téléchargement officiel** — [godotengine.org/download](https://godotengine.org/download/linux/)  
+   Choisir **Godot Engine – Standard** en **4.7.2** (fichier `.x86_64.zip` ou
+   `.x86_64` selon l’offre), **pas** la variante « .NET » sauf si vous utilisez C#.
+2. **Installation manuelle** :
+   ```bash
+   unzip Godot_v4.7.2-stable_linux.x86_64.zip
+   chmod +x Godot_v4.7.2-stable_linux.x86_64
+   mkdir -p ~/.local/bin
+   ln -sf "$PWD/Godot_v4.7.2-stable_linux.x86_64" ~/.local/bin/godot
+   ```
+   Vérifier : `godot --version` → `4.7.2.stable…`
+3. **Flatpak** (alternative) : `flatpak install flathub org.godotengine.Godot`
+   puis vérifier la version (`flatpak run org.godotengine.Godot --version`).
+4. **Depuis la racine du dépôt** (interface en français) :
+   ```bash
+   godot --path godot -e --language fr
+   ```
+   Pas besoin des templates d’export Web sur l’hôte (`./godot/export-web.sh` passe
+   par Docker).
 
-Éditeur dans Docker (labo, sans install Godot) :
+Le serveur Docker peut rester lancé : **F5** dans l’éditeur = client de plus
+(`ws://127.0.0.1:6604`).
+
+### Éditeur dans Docker (noVNC, sans install Godot)
 
 ```bash
 docker compose --profile editor up -d godot-editor
+# apres modif de godot/entrypoint-editor.sh ou Dockerfile.editor :
+docker compose --profile editor up -d --build godot-editor
 ```
 
-Puis http://localhost:6606/vnc.html → **Connect** (pas de mot de passe). Rendu
-logiciel (Xvfb) : plus lent que l’éditeur natif.
+Ouvrir  
+http://localhost:6606/vnc.html?autoconnect=true&resize=scale  
+→ l’éditeur démarre en **plein écran** sur le bureau virtuel (pas de mot de passe
+VNC). Dans noVNC : **Scaling mode → Local scaling** si la barre latérale masque
+le canvas. Rendu logiciel (Xvfb) : plus lent que l’éditeur natif.
+
+Après modif de scripts/scènes : `docker compose restart godot` si le serveur de
+jeu doit recharger ; `./godot/export-web.sh` pour mettre à jour le client **6605**.
+
+**Pavé numérique / Num Lock** : la session X force un état via `EDITOR_NUMLOCK`
+(`on` par défaut dans `.env`) à chaque connexion noVNC. Si le comportement semble
+inversé par rapport à votre clavier physique, essayez `EDITOR_NUMLOCK=off` puis
+`docker compose --profile editor up -d --build godot-editor`, ou basculez
+**Verr. Num** une fois dans le canvas (focus dans l’éditeur).
 
 Checklist guidée de la 1re heure → [§4](#4-première-séance-checklist).
 
@@ -375,7 +407,13 @@ Voir [§11 Frontend Nuxt](#11-frontend-nuxt).
 
 - Image dérivée de `godot-ci:4.7.2` + Xvfb + noVNC (`godot/Dockerfile.editor`)
 - **Non** démarré par `docker compose up -d` seul : `--profile editor`
-- Port hôte **6606** → noVNC **6080** ; projet monté `./godot` → `/project`
+- Port hôte **6606** → noVNC **6080**
+- **Persistance** :
+  - `./godot` → `/project` : scènes, scripts, `project.godot`, cache `.godot/`
+    (tout ce que vous enregistrez dans l’éditeur est sur le disque hôte)
+  - `./godot/.docker/editor-home` → prefs éditeur (langue, disposition des panneaux)
+- Dans `.env`, aligner `HOST_UID` / `HOST_GID` sur `id -u` / `id -g` pour que les
+  fichiers créés restent modifiables hors Docker
 - Dev labo uniquement (VNC sans mot de passe)
 
 Régénérer le build après modif jeu :
@@ -421,7 +459,7 @@ Hors navigateur (éditeur / CLI) : connexion **directe** `ws://127.0.0.1:6604`.
 
 | Chose | Quoi | URL ? |
 |-------|------|-------|
-| Éditeur natif | App bureau pour éditer scènes / scripts | `godot --path godot -e` |
+| Éditeur natif | App bureau pour éditer scènes / scripts | `godot --path godot -e --language fr` |
 | Éditeur noVNC | Conteneur `godot-editor` (profil `editor`) | http://localhost:6606/vnc.html |
 | Serveur dédié | Conteneur `godot` headless | `ws://…:6604` (brut, pas HTTP) |
 | Client HTML5 | Export Web servi par Caddy | http://localhost:6605 |
