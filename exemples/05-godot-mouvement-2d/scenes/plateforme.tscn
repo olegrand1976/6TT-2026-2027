@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://ex05plateforme"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(690, 40)
+
+[node name="Plateforme" type="StaticBody2D"]
+
+[node name="Visuel" type="ColorRect" parent="."]
+offset_left = -345.0
+offset_top = -20.0
+offset_right = 345.0
+offset_bottom = 20.0
+color = Color(0.2, 0.45, 0.28, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_1")

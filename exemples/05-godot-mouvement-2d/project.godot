@@ -1,0 +1,19 @@
+; Exemple 05 — mouvement 2D (Godot 4.7.2)
+config_version=5
+
+[application]
+
+config/name="Exemple 05 — Mouvement 2D"
+config/description="Plateforme + CharacterBody2D avant Rac6TT"
+run/main_scene="res://scenes/niveau.tscn"
+config/features=PackedStringArray("4.7")
+config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=640
+window/size/viewport_height=480
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"

@@ -2,14 +2,14 @@
 
 Contexte pour agents IA (Cursor / Claude Code) sur ce dépôt.
 
-- Documentation **humains / élèves** : [README.md](README.md) + **[docs/GUIDE-ELEVES.md](docs/GUIDE-ELEVES.md)**
+- Documentation **humains / élèves** : [README.md](README.md) + **[docs/GUIDE-ELEVES.md](docs/GUIDE-ELEVES.md)** + parcours **[exemples/README.md](exemples/README.md)** (`.gd` des exemples non indexés graphify)
 - Ne pas inventer de ports, d’URL API ou de chemins Godot : la config ci-dessous
   et le guide élèves font foi.
 
 ## Ce qu'est le projet
 
-Environnement de test conteneurisé pour un jeu de course 2D multijoueur. Six
-services Compose (+ éditeur optionnel profil `editor`) :
+Environnement de test conteneurisé pour un jeu de course 2D multijoueur. Sept
+services longue durée + **`godot-prepare`** (one-shot import/export au `up`) :
 
 | Service        | Techno                          | Port hôte | Port interne |
 |----------------|---------------------------------|-----------|--------------|
@@ -17,9 +17,10 @@ services Compose (+ éditeur optionnel profil `editor`) :
 | `redis`        | redis:8.8-alpine                | 6601      | 6379         |
 | `backend`      | Go 1.27.1 + Air                 | 6602      | 8080         |
 | `frontend`     | Nuxt 3 + Tailwind (node 24)     | 6603      | 3000         |
+| `godot-prepare`| import + export web si absent | —         | —            |
 | `godot`        | Godot 4.7.2 headless            | 6604      | 8999         |
 | `webclient`    | Caddy 2.11 (client HTML5)       | 6605      | 80           |
-| `godot-editor` | noVNC + Xvfb (profil `editor`)  | 6606      | 6080         |
+| `godot-editor` | noVNC + Xvfb                    | 6606      | 6080         |
 
 **Dev only** : hot-reload, CORS `*`, ports BDD exposés. Le jeu (WS) et l’API Go
 ne sont **pas encore** branchés bout-en-bout (Godot loggue `BACKEND_URL` seulement).
@@ -63,7 +64,9 @@ machine de labo. Ports hôte uniquement via `.env`. Ports internes inchangés.
 
 **Rester sur Nuxt 3** ; `vue-router` en v4 (la v5 casse Nuxt 3).
 
-**Godot** : `--headless --path /project` (pas `--main-pack`). `ENTRYPOINT []`.
+**Godot** : `--headless --path /project` (pas `--main-pack`). Entrypoint headless
+= import rapide avant le serveur ; premier clone = `godot-prepare` avant `godot` /
+`webclient`.
 
 **Ne pas monter** de volume sur `/root/.local/share/godot` (templates ~1.3 Go
 déjà dans l’image).
@@ -101,9 +104,8 @@ trafic absent — vérifier `docker compose logs webclient` (502 après ~3 s si
 handshake trop lourd ; **426** si requête HTTP simple sur `/ws`, normal).
 Diagnostic : `?port=NNNN`, `/diag.html`.
 
-**Éditeur Docker (optionnel)** : `docker compose --profile editor up -d
-godot-editor` → `vnc.html?autoconnect=true&resize=scale` (port 6606, `--fullscreen`).
-Préférer l’éditeur hôte : `godot --path godot -e --language fr` — install 4.7.2 :
+**Éditeur Docker** : démarré avec la stack → `vnc.html?autoconnect=true&resize=scale`
+(port 6606, `--fullscreen`). Préférer l’éditeur hôte : `godot --path godot -e --language fr` — install 4.7.2 :
 [godotengine.org/download/linux](https://godotengine.org/download/linux/).
 
 **Reconnexion** toutes les 3 s avec un **nouveau** `WebSocketMultiplayerPeer`.

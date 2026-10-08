@@ -1,0 +1,19 @@
+; Exemple 09 — réseau minimal
+config_version=5
+
+[application]
+
+config/name="Exemple 09 — Réseau minimal"
+config/description="WebSocket + RPC positions (port 8970, hors stack 6604)"
+run/main_scene="res://main.tscn"
+config/features=PackedStringArray("4.7")
+config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=800
+window/size/viewport_height=600
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"

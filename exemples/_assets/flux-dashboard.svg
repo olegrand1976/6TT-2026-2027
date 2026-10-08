@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 200" font-family="system-ui,sans-serif" font-size="14">
+  <rect width="640" height="200" fill="#0f1419"/>
+  <rect x="20" y="70" width="100" height="60" rx="6" fill="#21262d" stroke="#58a6ff"/>
+  <text x="38" y="105" fill="#e6edf3">Navigateur</text>
+  <rect x="160" y="70" width="120" height="60" rx="6" fill="#21262d" stroke="#a371f7"/>
+  <text x="175" y="98" fill="#e6edf3">Nuxt :6603</text>
+  <text x="168" y="118" fill="#8b949e" font-size="11">SSR Nitro</text>
+  <rect x="320" y="70" width="120" height="60" rx="6" fill="#21262d" stroke="#3fb950"/>
+  <text x="335" y="98" fill="#e6edf3">Go :8080</text>
+  <text x="328" y="118" fill="#8b949e" font-size="11">backend DNS</text>
+  <rect x="480" y="50" width="140" height="45" rx="6" fill="#161b22" stroke="#484f58"/>
+  <text x="495" y="78" fill="#8b949e">Postgres + pgvector</text>
+  <rect x="480" y="105" width="140" height="45" rx="6" fill="#161b22" stroke="#484f58"/>
+  <text x="510" y="133" fill="#8b949e">Redis</text>
+  <path d="M120 100 H160" stroke="#58a6ff" stroke-width="2"/>
+  <path d="M280 100 H320" stroke="#a371f7" stroke-width="2"/>
+  <path d="M440 85 H480" stroke="#3fb950" stroke-width="2"/>
+  <path d="M440 115 H480" stroke="#3fb950" stroke-width="2"/>
+  <text x="20" y="40" fill="#e6edf3" font-weight="600">Dashboard  deux chemins API</text>
+  <text x="20" y="175" fill="#6e7681" font-size="12">PUBLIC localhost:6602 (tick bouton) · INTERNAL http://backend:8080 (SSR)</text>
+</svg>

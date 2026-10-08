@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 240" font-family="system-ui,sans-serif" font-size="13">
+  <rect width="560" height="240" fill="#0f1419"/>
+  <text x="20" y="28" fill="#e6edf3" font-weight="600">Autorité serveur (Rac6TT)</text>
+  <rect x="20" y="50" width="140" height="70" rx="6" fill="#21262d" stroke="#58a6ff"/>
+  <text x="40" y="80" fill="#e6edf3">Client A</text>
+  <text x="32" y="100" fill="#8b949e">submit_input</text>
+  <rect x="20" y="150" width="140" height="70" rx="6" fill="#21262d" stroke="#58a6ff"/>
+  <text x="40" y="180" fill="#e6edf3">Client B</text>
+  <text x="32" y="200" fill="#8b949e">submit_input</text>
+  <rect x="210" y="90" width="140" height="90" rx="6" fill="#238636" stroke="#3fb950"/>
+  <text x="235" y="120" fill="#fff">Serveur</text>
+  <text x="222" y="140" fill="#aff5b4" font-size="11">simule CarPhysics</text>
+  <text x="228" y="158" fill="#aff5b4" font-size="11">30 Hz snapshot</text>
+  <path d="M160 85 L210 120" stroke="#58a6ff"/>
+  <path d="M160 185 L210 150" stroke="#58a6ff"/>
+  <path d="M350 120 L420 85" stroke="#3fb950" stroke-dasharray="4"/>
+  <path d="M350 150 L420 185" stroke="#3fb950" stroke-dasharray="4"/>
+  <text x="430" y="90" fill="#8b949e">snapshot</text>
+  <text x="430" y="190" fill="#8b949e">snapshot</text>
+  <text x="20" y="232" fill="#6e7681" font-size="11">NSud Net au même chemin : /root/Main/Net</text>
+</svg>

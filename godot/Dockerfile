@@ -8,6 +8,9 @@ RUN apt-get update \
 
 WORKDIR /project
 
+COPY prepare-stack.sh entrypoint-headless.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/prepare-stack.sh /usr/local/bin/entrypoint-headless.sh
+
 COPY . .
 
 EXPOSE 8999
@@ -15,6 +18,5 @@ EXPOSE 8999
 # --headless : aucun serveur d'affichage requis ; main.gd en deduit qu'il doit
 #              endosser le role de serveur dedie.
 # --path     : lance le projet situe la (main_scene de project.godot).
-# L'entrypoint de l'image est neutralise pour que CMD soit execute tel quel.
-ENTRYPOINT []
+ENTRYPOINT ["/usr/local/bin/entrypoint-headless.sh"]
 CMD ["godot", "--headless", "--path", "/project"]

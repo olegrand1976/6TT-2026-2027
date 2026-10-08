@@ -20,6 +20,7 @@ Pour les agents IA (Cursor / Claude) : [CLAUDE.md](../CLAUDE.md).
 3. [Démarrage](#3-démarrage)
 4. [Première séance (checklist)](#4-première-séance-checklist)
 5. [Structure du dépôt](#5-structure-du-dépôt)
+5 bis. [Parcours exemples](#5-bis-parcours-exemples)
 6. [Réseau Docker et ports](#6-réseau-docker-et-ports)
 7. [Composant par composant](#7-composant-par-composant)
 8. [Flux de données](#8-flux-de-données)
@@ -52,7 +53,7 @@ Ce n’est **pas** une stack de production : CORS ouvert, bases exposées, hot-r
 
 ## 2. Vue d’ensemble
 
-Six services sur le réseau Docker `game-net` :
+Sept services sur le réseau Docker `game-net` :
 
 ```text
                     ┌─────────────────────────────────────────────┐
@@ -80,7 +81,7 @@ Six services sur le réseau Docker `game-net` :
 | `frontend`  | Nuxt 3 + Tailwind (Node 24)  | 6603      | 3000         | Dashboard SSR |
 | `godot`     | Godot 4.7.2 headless         | 6604      | 8999         | Serveur de jeu WS |
 | `webclient` | Caddy 2.11                   | 6605      | 80           | Client HTML5 + `/ws` |
-| `godot-editor` | noVNC (profil `editor`)   | 6606      | 6080         | Éditeur Godot dans le navigateur |
+| `godot-editor` | noVNC + Xvfb              | 6606      | 6080         | Éditeur Godot dans le navigateur |
 
 **Deux « faces » du projet :**
 
@@ -100,7 +101,7 @@ Prérequis : Docker + Docker Compose v2, ~4 Go libres (image Godot).
 ```bash
 cp .env.example .env          # OBLIGATOIRE — adapter POSTGRES_PASSWORD
 docker compose up -d --build
-docker compose ps             # 5 healthchecks verts (godot : logs seulement)
+docker compose ps             # 7 services (5 healthchecks ; godot + éditeur : logs)
 ```
 
 > **Credentials :** partez toujours de `.env.example`
@@ -110,7 +111,11 @@ docker compose ps             # 5 healthchecks verts (godot : logs seulement)
 > commandes `psql` du guide et du README suivent l’example ; adaptez-les à
 > *votre* `.env` (`grep POSTGRES_ .env`).
 
-Premier build : **3–5 minutes** (image Godot ~2 Go, `npm ci` frontend).
+Premier build : **3–5 minutes** (image Godot ~2 Go, `npm ci` frontend). Au **premier**
+`up` sur un clone sans cache `.godot/` ni `build/web/`, le conteneur éphémère
+`godot-prepare` lance automatiquement `--import` puis l’export HTML5 (comme
+`./godot/export-web.sh`) avant de démarrer le serveur WS et Caddy — inutile de
+rejouer à la main les étapes import / export / `restart godot`.
 
 Ensuite :
 
@@ -119,7 +124,7 @@ Ensuite :
 | http://localhost:6603 | Dashboard — bandeau **STACK OPERATIONNELLE** |
 | http://localhost:6605 | Jouer (flèches) — plusieurs onglets = multi |
 | http://localhost:6605/diag.html | Diagnostic WebSocket (proxy vs direct) |
-| http://localhost:6606/vnc.html?autoconnect=true&resize=scale | Éditeur Godot noVNC plein écran (profil `editor`) |
+| http://localhost:6606/vnc.html?autoconnect=true&resize=scale | Éditeur Godot noVNC plein écran |
 
 ### Installer Godot 4.7.2 en local (Linux, recommandé)
 
@@ -150,10 +155,11 @@ Le serveur Docker peut rester lancé : **F5** dans l’éditeur = client de plus
 
 ### Éditeur dans Docker (noVNC, sans install Godot)
 
+Inclus dans `docker compose up -d --build`. Après modif de
+`godot/entrypoint-editor.sh` ou `Dockerfile.editor` :
+
 ```bash
-docker compose --profile editor up -d godot-editor
-# apres modif de godot/entrypoint-editor.sh ou Dockerfile.editor :
-docker compose --profile editor up -d --build godot-editor
+docker compose up -d --build godot-editor
 ```
 
 Ouvrir  
@@ -167,14 +173,14 @@ jeu doit recharger ; `./godot/export-web.sh` pour mettre à jour le client **660
 
 Fichiers copiés **à la main** dans `godot/` pendant que noVNC est ouvert : le
 dock **Système de fichiers** ne se met pas toujours à jour. Relancer
-`godot-editor` (`docker compose --profile editor restart godot-editor`) ou dans
+`godot-editor` (`docker compose restart godot-editor`) ou dans
 l’éditeur **Projet → Recharger le projet actuel**. Au démarrage, le conteneur
 lance un `--import` pour indexer les nouveaux fichiers.
 
 **Pavé numérique / Num Lock** : la session X force un état via `EDITOR_NUMLOCK`
 (`on` par défaut dans `.env`) à chaque connexion noVNC. Si le comportement semble
 inversé par rapport à votre clavier physique, essayez `EDITOR_NUMLOCK=off` puis
-`docker compose --profile editor up -d --build godot-editor`, ou basculez
+`docker compose up -d --build godot-editor`, ou basculez
 **Verr. Num** une fois dans le canvas (focus dans l’éditeur).
 
 Checklist guidée de la 1re heure → [§4](#4-première-séance-checklist).
@@ -223,7 +229,9 @@ projet-6TT/
 ├── CLAUDE.md                 # règles pour agents IA
 ├── docs/
 │   └── GUIDE-ELEVES.md       # ce guide
-├── docker-compose.yml        # 6 services, healthchecks, volumes
+├── exemples/                 # parcours pédagogique (labs + mini-projets Godot)
+│   └── README.md             # index modules 01–09
+├── docker-compose.yml        # 7 services, healthchecks, volumes
 ├── .env / .env.example       # identifiants + ports hôte
 ├── db/init/
 │   └── 01-extensions.sql     # vector + table démo (1re création volume)
@@ -259,6 +267,20 @@ Fichiers **générés / locaux** à ne pas versionner inutilement : `.env`,
 
 ---
 
+## 5 bis. Parcours exemples
+
+Neuf micro-modules dans **[`exemples/README.md`](../exemples/README.md)** : validation
+stack, réseau/ports, Postgres/Redis, API Nuxt, export Web/WS, noVNC, puis trois
+mini-projets Godot (mouvement 2D, course locale, RPC minimal) avant le dossier
+[`godot/`](../godot/) Rac6TT complet.
+
+Ordre conseillé : **01 → 02 → 03 → 04 → 05 → 08 → 09 → 06 → 07** (06–07
+peuvent suivre dès que la stack tourne).
+
+Schémas SVG partagés : [`exemples/_assets/`](../exemples/_assets/).
+
+---
+
 ## 6. Réseau Docker et ports
 
 ### Pourquoi 6600–6606 ?
@@ -267,8 +289,8 @@ Sur la machine de labo, les ports classiques (`5432`, `6379`, `8080`, `3000`)
 étaient déjà pris par d’autres stacks. Compose aurait échoué avec
 `port is already allocated`.
 
-Le bloc **6600–6606** regroupe les services de façon lisible (6606 = profil
-`editor` optionnel). Seuls les
+Le bloc **6600–6606** regroupe les services de façon lisible (6606 = éditeur
+noVNC). Seuls les
 ports **publiés sur l’hôte** changent. À l’intérieur de Docker, on garde les
 ports standards et on parle par **nom de service** :
 
@@ -390,11 +412,19 @@ Voir [§10 API backend](#10-api-backend).
 
 Voir [§11 Frontend Nuxt](#11-frontend-nuxt).
 
-### 7.5 Godot serveur (`godot`)
+### 7.5 Godot (`godot-prepare` + serveur)
+
+**`godot-prepare`** (conteneur éphémère, `restart: "no"`) :
+
+- Script [`prepare-stack.sh`](../godot/prepare-stack.sh) : `--import` si `.godot/` absent,
+  export Web si `build/web/index.html` absent
+- S’exécute à chaque `docker compose up` ; sortie immédiate si déjà à jour
+- `godot`, `webclient` et `godot-editor` attendent `service_completed_successfully`
+
+**`godot`** (serveur headless) :
 
 - Image CI `barichello/godot-ci:4.7.2` avec templates d’export (~1.3 Go)
-- CMD : `godot --headless --path /project` (pas `--main-pack`)
-- `ENTRYPOINT []` pour que le `CMD` Compose soit respecté
+- Entrypoint : import rapide puis `godot --headless --path /project`
 - Écoute WebSocket `0.0.0.0:8999` (`GAME_PORT`)
 - Projet monté : `./godot` → `/project`
 - **Pas** de volume sur `/root/.local/share/godot` (sinon copie inutile des templates)
@@ -409,10 +439,10 @@ Voir [§11 Frontend Nuxt](#11-frontend-nuxt).
   - handshake WebSocket sur `/ws` → `godot:8999` avec **strip** de cookies /
     headers lourds ; requête HTTP simple sur `/ws` → **426** (pas un 502 Godot)
 
-### 7.7 Éditeur Godot noVNC (`godot-editor`, profil `editor`)
+### 7.7 Éditeur Godot noVNC (`godot-editor`)
 
 - Image dérivée de `godot-ci:4.7.2` + Xvfb + noVNC (`godot/Dockerfile.editor`)
-- **Non** démarré par `docker compose up -d` seul : `--profile editor`
+- Démarré avec `docker compose up -d --build` (7ᵉ service)
 - Port hôte **6606** → noVNC **6080**
 - **Persistance** :
   - `./godot` → `/project` : scènes, scripts, `project.godot`, cache `.godot/`
@@ -466,7 +496,7 @@ Hors navigateur (éditeur / CLI) : connexion **directe** `ws://127.0.0.1:6604`.
 | Chose | Quoi | URL ? |
 |-------|------|-------|
 | Éditeur natif | App bureau pour éditer scènes / scripts | `godot --path godot -e --language fr` |
-| Éditeur noVNC | Conteneur `godot-editor` (profil `editor`) | http://localhost:6606/vnc.html |
+| Éditeur noVNC | Conteneur `godot-editor` | http://localhost:6606/vnc.html |
 | Serveur dédié | Conteneur `godot` headless | `ws://…:6604` (brut, pas HTTP) |
 | Client HTML5 | Export Web servi par Caddy | http://localhost:6605 |
 
@@ -521,12 +551,15 @@ fonctionne dans les deux sens de rotation.
 
 ### Export Web
 
+Au premier `docker compose up`, l’export est fait par **`godot-prepare`** si
+`build/web/index.html` est absent. Ensuite, après chaque modif de scènes/scripts :
+
 ```bash
 ./godot/export-web.sh
 ```
 
-Tourne **dans** le conteneur (templates). Recopie `web-extra/` (ex. `diag.html`),
-corrige le propriétaire des fichiers, redémarre Caddy.
+Tourne **dans** le conteneur (templates, `--force-export`). Recopie `web-extra/`
+(ex. `diag.html`), corrige le propriétaire, redémarre Caddy.
 
 Preset actuel : variante **sans threads** (compatible partout). Les headers
 COOP/COEP sont déjà envoyés si vous basculez `thread_support` plus tard.
@@ -625,6 +658,7 @@ Lisez-la avant de « simplifier » la config.
 | Réutiliser un peer WS échoué | Plus jamais de reconnexion | Nouveau peer à chaque essai |
 | Signaux branchés trop tard | Course au démarrage | Brancher avant `_try_connect` |
 | Déplacer le nœud `Net` | RPC silencieux | Chemin `/root/Main/Net` |
+| Clone sans `.godot/` ni export web | Serveur ou client 6605 incohérent | Automatique via `godot-prepare` au 1er `up` ; sinon import + `./godot/export-web.sh` |
 | Oublier `export-web.sh` | Navigateur sur vieux build | Réexporter après chaque modif jeu |
 
 ### Frontend / Backend
@@ -698,6 +732,7 @@ ignorés en `--code-only`) : se référer à Compose et à ce guide.
 
 Idées d’extensions cohérentes avec l’existant (à valider avec l’enseignant) :
 
+0. Terminer le [parcours exemples](../exemples/README.md) avant de modifier le jeu principal.
 1. Brancher le serveur Godot sur l’API (`BACKEND_URL`) pour pousser meilleurs tours.
 2. Afficher le classement live sur le HUD du client.
 3. Auth / salles de jeu (au-delà du peer id Godot).

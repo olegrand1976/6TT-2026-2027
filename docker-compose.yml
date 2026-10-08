@@ -129,6 +129,24 @@ services:
       start_period: 60s
 
   # ---------------------------------------------------------------------------
+  # Import + export web au premier demarrage (cache .godot/, build/web/)
+  # ---------------------------------------------------------------------------
+  godot-prepare:
+    build:
+      context: ./godot
+      dockerfile: Dockerfile
+    restart: "no"
+    environment:
+      HOST_UID: ${HOST_UID:-1000}
+      HOST_GID: ${HOST_GID:-1000}
+    volumes:
+      - ./godot:/project
+    entrypoint: ["/usr/local/bin/prepare-stack.sh"]
+    depends_on:
+      backend:
+        condition: service_started
+
+  # ---------------------------------------------------------------------------
   # Serveur headless Godot 4 (serveur dedie 2D / WebSocket)
   # ---------------------------------------------------------------------------
   godot:
@@ -149,15 +167,15 @@ services:
     depends_on:
       backend:
         condition: service_started
+      godot-prepare:
+        condition: service_completed_successfully
     networks:
       - game-net
 
   # ---------------------------------------------------------------------------
-  # Editeur Godot 4 via noVNC (profil optionnel — ne remplace pas l'editeur hote)
+  # Editeur Godot 4 via noVNC (6606) — demarre avec la stack ; editeur hote possible aussi
   # ---------------------------------------------------------------------------
   godot-editor:
-    profiles:
-      - editor
     build:
       context: ./godot
       dockerfile: Dockerfile.editor
@@ -176,7 +194,10 @@ services:
       - ./godot:/project
       - ./godot/.docker/editor-home:/editor-home
     depends_on:
-      - godot
+      godot-prepare:
+        condition: service_completed_successfully
+      godot:
+        condition: service_started
     networks:
       - game-net
     shm_size: "256mb"
@@ -195,7 +216,10 @@ services:
       - ./godot/build/web:/srv:ro
       - ./godot/Caddyfile:/etc/caddy/Caddyfile:ro
     depends_on:
-      - godot
+      godot-prepare:
+        condition: service_completed_successfully
+      godot:
+        condition: service_started
     networks:
       - game-net
     healthcheck:

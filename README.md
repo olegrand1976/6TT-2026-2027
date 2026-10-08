@@ -9,6 +9,7 @@ Hot-reload partout (Air / Vite) : le code est monté depuis l’hôte.
 | Public | Document |
 |--------|----------|
 | **Élèves 6TT** — structure, composants, pièges | **[docs/GUIDE-ELEVES.md](docs/GUIDE-ELEVES.md)** |
+| **Parcours exemples** (labs + mini-projets Godot) | **[exemples/README.md](exemples/README.md)** |
 | Agents IA (Cursor / Claude) | [CLAUDE.md](CLAUDE.md) |
 
 ---
@@ -24,7 +25,8 @@ docker compose ps
 > Sans `.env` complet, Compose utilise d’autres defaults (`game_user` / `game_db`).
 > Toujours partir de `.env.example` (`game_admin` / `racing_game_db`).
 
-Premier lancement : ~3–5 min (image Godot ~2 Go + npm).
+Premier lancement : ~3–5 min (image Godot ~2 Go + npm). Sur un clone neuf,
+`godot-prepare` importe le projet et exporte le client web avant 6604/6605.
 
 **Checklist 1re séance** → [Guide §4](docs/GUIDE-ELEVES.md#4-première-séance-checklist).
 
@@ -36,7 +38,7 @@ Premier lancement : ~3–5 min (image Godot ~2 Go + npm).
 | PostgreSQL | `localhost:6600` | Données + recherche vectorielle |
 | Redis | `localhost:6601` | Compteurs temps réel |
 | Godot WS | `ws://localhost:6604` | Serveur de jeu (WebSocket brut, pas HTTP) |
-| Godot éditeur (noVNC) | http://localhost:6606/vnc.html | Profil Docker `editor` (voir ci-dessous) |
+| Godot éditeur (noVNC) | http://localhost:6606/vnc.html | Démarré avec la stack (voir ci-dessous) |
 
 - Dashboard : bandeau **STACK OPERATIONNELLE** si Postgres, pgvector et Redis OK.
 - Jeu : flèches pour conduire ; plusieurs onglets = multijoueur.
@@ -46,14 +48,12 @@ Premier lancement : ~3–5 min (image Godot ~2 Go + npm).
 
 ## Éditeur Godot dans Docker (port 6606)
 
-Service **optionnel** (noVNC + Xvfb, dev labo uniquement) :
+Démarré avec `docker compose up -d --build` (noVNC + Xvfb, dev labo).
 
-```bash
-docker compose --profile editor up -d godot-editor
-```
+http://localhost:6606/vnc.html?autoconnect=true&resize=scale (éditeur plein
+écran). Rebuild éditeur seul : `docker compose up -d --build godot-editor`.
 
-Puis http://localhost:6606/vnc.html?autoconnect=true&resize=scale (éditeur plein
-écran). Install local : [Guide élèves §3](docs/GUIDE-ELEVES.md#3-démarrage) (Godot 4.7.2).
+Install local (plus fluide) : [Guide élèves §3](docs/GUIDE-ELEVES.md#3-démarrage) (Godot 4.7.2).
 
 ---
 

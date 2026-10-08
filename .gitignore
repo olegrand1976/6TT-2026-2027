@@ -13,6 +13,7 @@ frontend/.data/
 # Godot
 godot/.godot/
 godot/build/
+exemples/**/.godot/
 
 # Graphe de code local (généré par graphify)
 graphify-out/
