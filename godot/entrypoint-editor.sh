@@ -16,14 +16,28 @@ fix_project_ownership() {
 	chown -R "${HOST_UID}:${HOST_GID}" /project "${HOME}" 2>/dev/null || true
 }
 
+cleanup() {
+	fix_project_ownership
+	kill "${XVFB_PID:-}" 2>/dev/null || true
+	pkill -x x11vnc 2>/dev/null || true
+	pkill -f websockify 2>/dev/null || true
+}
+
 mkdir -p "${HOME}/.config/godot"
 fix_project_ownership
-trap fix_project_ownership EXIT
+trap cleanup EXIT
 
 X_DISPLAY_NUM="${DISPLAY#*:}"
 X_SOCKET="/tmp/.X11-unix/X${X_DISPLAY_NUM}"
+X_LOCK="/tmp/.X${X_DISPLAY_NUM}-lock"
+
+# Redemarrage Docker (restart policy) : nettoyer lock/socket X11 orphelins.
+pkill -x Xvfb 2>/dev/null || true
+rm -f "${X_LOCK}" 2>/dev/null || true
+rm -f "${X_SOCKET}" 2>/dev/null || true
 
 Xvfb "${DISPLAY}" -screen 0 "${EDITOR_SCREEN}" -ac +extension GLX +render -noreset &
+XVFB_PID=$!
 for _ in $(seq 1 60); do
 	if [ -S "${X_SOCKET}" ]; then
 		break
@@ -55,6 +69,10 @@ x11vnc -display "${DISPLAY}" -forever -shared -rfbport "${VNC_PORT}" -nopw \
 	-modtweak -xkb -clear_mods \
 	-accept "sh -c 'DISPLAY=${DISPLAY} numlockx ${EDITOR_NUMLOCK} 2>/dev/null || true; exit 0'" &
 websockify --web=/usr/share/novnc "${NOVNC_PORT}" "localhost:${VNC_PORT}" &
+
+echo "[6TT] Scan des fichiers ajoutes sur l'hote (import)..."
+gosu "${HOST_UID}:${HOST_GID}" godot --headless --path /project --import >/dev/null 2>&1 || true
+fix_project_ownership
 
 echo "[6TT] Editeur Godot (fr) — sauvegardes dans ./godot sur l'hote ; noVNC : vnc.html?autoconnect=true&resize=scale"
 (

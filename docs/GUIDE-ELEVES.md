@@ -165,6 +165,12 @@ le canvas. Rendu logiciel (Xvfb) : plus lent que l’éditeur natif.
 Après modif de scripts/scènes : `docker compose restart godot` si le serveur de
 jeu doit recharger ; `./godot/export-web.sh` pour mettre à jour le client **6605**.
 
+Fichiers copiés **à la main** dans `godot/` pendant que noVNC est ouvert : le
+dock **Système de fichiers** ne se met pas toujours à jour. Relancer
+`godot-editor` (`docker compose --profile editor restart godot-editor`) ou dans
+l’éditeur **Projet → Recharger le projet actuel**. Au démarrage, le conteneur
+lance un `--import` pour indexer les nouveaux fichiers.
+
 **Pavé numérique / Num Lock** : la session X force un état via `EDITOR_NUMLOCK`
 (`on` par défaut dans `.env`) à chaque connexion noVNC. Si le comportement semble
 inversé par rapport à votre clavier physique, essayez `EDITOR_NUMLOCK=off` puis
