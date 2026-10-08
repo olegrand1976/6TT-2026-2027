@@ -229,8 +229,10 @@ projet-6TT/
 ├── CLAUDE.md                 # règles pour agents IA
 ├── docs/
 │   └── GUIDE-ELEVES.md       # ce guide
-├── exemples/                 # parcours pédagogique (labs + mini-projets Godot)
-│   └── README.md             # index modules 01–09
+├── exemples/                 # parcours pédagogique
+│   ├── godot/                # 9 modules Godot & stack (01–09)
+│   ├── go/                   # 8 mini-stacks Go + Caddy
+│   └── README.md
 ├── docker-compose.yml        # 7 services, healthchecks, volumes
 ├── .env / .env.example       # identifiants + ports hôte
 ├── db/init/
@@ -269,15 +271,14 @@ Fichiers **générés / locaux** à ne pas versionner inutilement : `.env`,
 
 ## 5 bis. Parcours exemples
 
-Neuf micro-modules dans **[`exemples/README.md`](../exemples/README.md)** : validation
-stack, réseau/ports, Postgres/Redis, API Nuxt, export Web/WS, noVNC, puis trois
-mini-projets Godot (mouvement 2D, course locale, RPC minimal) avant le dossier
-[`godot/`](../godot/) Rac6TT complet.
+Parcours **Godot & stack** (9 modules) : **[`exemples/godot/`](../exemples/godot/README.md)**  
+Parcours **Go + Caddy** (6710–6718) : **[`exemples/go/`](../exemples/go/)**  
+Index : [`exemples/README.md`](../exemples/README.md).
 
-Ordre conseillé : **01 → 02 → 03 → 04 → 05 → 08 → 09 → 06 → 07** (06–07
-peuvent suivre dès que la stack tourne).
+Ordre Godot conseillé : **01 → 02 → 03 → 04 → 05 → 08 → 09 → 06 → 07**.  
+Mini-projets **05 / 08 / 09** : `docker-compose.yml` (`import` ; serveur **09** → **8970**).
 
-Schémas SVG partagés : [`exemples/_assets/`](../exemples/_assets/).
+Schémas SVG : [`exemples/_assets/`](../exemples/_assets/).
 
 ---
 
@@ -732,7 +733,7 @@ ignorés en `--code-only`) : se référer à Compose et à ce guide.
 
 Idées d’extensions cohérentes avec l’existant (à valider avec l’enseignant) :
 
-0. Terminer le [parcours exemples](../exemples/README.md) avant de modifier le jeu principal.
+0. Terminer le [parcours Godot](../exemples/godot/README.md) avant de modifier le jeu principal.
 1. Brancher le serveur Godot sur l’API (`BACKEND_URL`) pour pousser meilleurs tours.
 2. Afficher le classement live sur le HUD du client.
 3. Auth / salles de jeu (au-delà du peer id Godot).

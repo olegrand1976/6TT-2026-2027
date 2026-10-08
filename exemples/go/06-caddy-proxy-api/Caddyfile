@@ -1,0 +1,11 @@
+:80 {
+	handle /api/* {
+		reverse_proxy api:8080
+	}
+	handle {
+		root * /srv
+		file_server
+	}
+	encode gzip
+	header Cache-Control "no-store"
+}

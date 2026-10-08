@@ -1,0 +1,14 @@
+name: ex-go-05-caddy-static
+
+services:
+  web:
+    image: caddy:2.11-alpine
+    ports:
+      - "6715:80"
+    volumes:
+      - ./public:/srv:ro
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
+      interval: 5s
+      retries: 6

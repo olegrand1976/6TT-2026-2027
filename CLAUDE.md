@@ -2,7 +2,7 @@
 
 Contexte pour agents IA (Cursor / Claude Code) sur ce dépôt.
 
-- Documentation **humains / élèves** : [README.md](README.md) + **[docs/GUIDE-ELEVES.md](docs/GUIDE-ELEVES.md)** + parcours **[exemples/README.md](exemples/README.md)** (`.gd` des exemples non indexés graphify)
+- Documentation **humains / élèves** : [README.md](README.md) + **[docs/GUIDE-ELEVES.md](docs/GUIDE-ELEVES.md)** + **[exemples/godot/](exemples/godot/README.md)** + **[exemples/go/](exemples/go/README.md)** (`.gd` exemples non indexés graphify)
 - Ne pas inventer de ports, d’URL API ou de chemins Godot : la config ci-dessous
   et le guide élèves font foi.
 

@@ -1,0 +1,11 @@
+name: ex-godot-08-course
+
+services:
+  import:
+    image: barichello/godot-ci:4.7.2
+    working_dir: /project
+    volumes:
+      - .:/project
+    entrypoint: []
+    command: ["godot", "--headless", "--path", "/project", "--import"]
+    restart: "no"

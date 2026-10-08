@@ -9,7 +9,7 @@ Hot-reload partout (Air / Vite) : le code est monté depuis l’hôte.
 | Public | Document |
 |--------|----------|
 | **Élèves 6TT** — structure, composants, pièges | **[docs/GUIDE-ELEVES.md](docs/GUIDE-ELEVES.md)** |
-| **Parcours exemples** (labs + mini-projets Godot) | **[exemples/README.md](exemples/README.md)** |
+| **Parcours exemples** | **[exemples/](exemples/README.md)** · [Godot](exemples/godot/README.md) · [Go](exemples/go/README.md) |
 | Agents IA (Cursor / Claude) | [CLAUDE.md](CLAUDE.md) |
 
 ---

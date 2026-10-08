@@ -1,0 +1,28 @@
+name: ex-go-06-caddy-api
+
+services:
+  api:
+    build: .
+    environment:
+      HTTP_ADDR: ":8080"
+    expose:
+      - "8080"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/healthz"]
+      interval: 5s
+      retries: 6
+
+  web:
+    image: caddy:2.11-alpine
+    ports:
+      - "6716:80"
+    volumes:
+      - ./public:/srv:ro
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
+      interval: 5s
+      retries: 6

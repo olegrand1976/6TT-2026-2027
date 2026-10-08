@@ -1,0 +1,44 @@
+body {
+  font-family: system-ui, sans-serif;
+  background: linear-gradient(160deg, #0f1419 0%, #1a2332 50%, #16301f 100%);
+  color: #e6edf3;
+  margin: 2rem;
+  min-height: 100vh;
+}
+
+.badge {
+  display: inline-block;
+  background: #f97316;
+  color: #111;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+h1 {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+
+button {
+  background: #22c55e;
+  color: #052e16;
+  font-weight: 700;
+  border: none;
+  padding: 0.65rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+button:hover {
+  filter: brightness(1.08);
+}
+
+pre {
+  background: #21262d;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}

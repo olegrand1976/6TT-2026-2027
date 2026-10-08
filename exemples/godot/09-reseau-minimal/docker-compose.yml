@@ -1,0 +1,25 @@
+name: ex-godot-09-reseau
+
+services:
+  import:
+    image: barichello/godot-ci:4.7.2
+    working_dir: /project
+    volumes:
+      - .:/project
+    entrypoint: []
+    command: ["godot", "--headless", "--path", "/project", "--import"]
+    restart: "no"
+
+  server:
+    image: barichello/godot-ci:4.7.2
+    working_dir: /project
+    ports:
+      - "8970:8970"
+    volumes:
+      - .:/project
+    entrypoint: []
+    command: ["godot", "--headless", "--path", "/project", "--", "--server"]
+    depends_on:
+      import:
+        condition: service_completed_successfully
+    restart: unless-stopped

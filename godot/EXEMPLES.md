@@ -1,8 +1,7 @@
-# Exemples Godot déplacés
+# Exemples Godot (parcours pédagogique)
 
-Les scènes de test (`scenes_tests_exemples/`) ont été regroupées dans le parcours
-pédagogique racine :
+Les labs et mini-projets Godot sont dans :
 
-**[exemples/05-godot-mouvement-2d](../exemples/05-godot-mouvement-2d/)**
+**[exemples/godot/](../exemples/godot/README.md)**
 
-Voir l’index complet : [exemples/README.md](../exemples/README.md).
+Index global : [exemples/README.md](../exemples/README.md).

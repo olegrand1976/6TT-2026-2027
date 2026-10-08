@@ -1,0 +1,35 @@
+name: ex-go-03-postgres
+
+volumes:
+  postgres_data:
+
+services:
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+      POSTGRES_DB: demo
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U demo -d demo"]
+      interval: 3s
+      retries: 10
+
+  api:
+    build: .
+    ports:
+      - "6712:8080"
+    environment:
+      HTTP_ADDR: ":8080"
+      DATABASE_URL: postgres://demo:demo@db:5432/demo?sslmode=disable
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/healthz"]
+      interval: 5s
+      retries: 8
+      start_period: 15s
