@@ -1,0 +1,26 @@
+FROM barichello/godot-ci:4.7.2
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libfontconfig1 \
+        libxcursor1 \
+        libxi6 \
+        libxinerama1 \
+        libxrandr2 \
+        xvfb \
+        x11vnc \
+        fluxbox \
+        novnc \
+        websockify \
+        dbus-x11 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /project
+
+COPY entrypoint-editor.sh /usr/local/bin/entrypoint-editor.sh
+RUN chmod +x /usr/local/bin/entrypoint-editor.sh
+
+EXPOSE 6080
+
+ENTRYPOINT []
+CMD ["/usr/local/bin/entrypoint-editor.sh"]

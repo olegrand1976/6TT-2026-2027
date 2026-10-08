@@ -153,6 +153,29 @@ services:
       - game-net
 
   # ---------------------------------------------------------------------------
+  # Editeur Godot 4 via noVNC (profil optionnel — ne remplace pas l'editeur hote)
+  # ---------------------------------------------------------------------------
+  godot-editor:
+    profiles:
+      - editor
+    build:
+      context: ./godot
+      dockerfile: Dockerfile.editor
+    container_name: 6tt_godot_editor
+    restart: unless-stopped
+    ports:
+      - "${GODOT_EDITOR_PORT:-6606}:6080"
+    environment:
+      NOVNC_PORT: "6080"
+    volumes:
+      - ./godot:/project
+    depends_on:
+      - godot
+    networks:
+      - game-net
+    shm_size: "256mb"
+
+  # ---------------------------------------------------------------------------
   # Client de jeu exporte en HTML5, servi en statique
   # ---------------------------------------------------------------------------
   # Le contenu vient de ./godot/build/web, produit par ./godot/export-web.sh

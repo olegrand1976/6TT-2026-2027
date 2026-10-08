@@ -80,6 +80,7 @@ Six services sur le réseau Docker `game-net` :
 | `frontend`  | Nuxt 3 + Tailwind (Node 24)  | 6603      | 3000         | Dashboard SSR |
 | `godot`     | Godot 4.7.2 headless         | 6604      | 8999         | Serveur de jeu WS |
 | `webclient` | Caddy 2.11                   | 6605      | 80           | Client HTML5 + `/ws` |
+| `godot-editor` | noVNC (profil `editor`)   | 6606      | 6080         | Éditeur Godot dans le navigateur |
 
 **Deux « faces » du projet :**
 
@@ -118,8 +119,9 @@ Ensuite :
 | http://localhost:6603 | Dashboard — bandeau **STACK OPERATIONNELLE** |
 | http://localhost:6605 | Jouer (flèches) — plusieurs onglets = multi |
 | http://localhost:6605/diag.html | Diagnostic WebSocket (proxy vs direct) |
+| http://localhost:6606/vnc.html | Éditeur Godot via noVNC (profil `editor`, voir ci-dessous) |
 
-Éditeur Godot sur la machine (si installé) :
+Éditeur Godot sur la machine (recommandé) :
 
 ```bash
 godot --path godot -e     # binaire typique : ~/.local/bin/godot (4.7.2)
@@ -127,6 +129,15 @@ godot --path godot -e     # binaire typique : ~/.local/bin/godot (4.7.2)
 
 Le serveur Docker continue de tourner : F5 dans l’éditeur se connecte comme un
 client de plus (`ws://127.0.0.1:6604`).
+
+Éditeur dans Docker (labo, sans install Godot) :
+
+```bash
+docker compose --profile editor up -d godot-editor
+```
+
+Puis http://localhost:6606/vnc.html → **Connect** (pas de mot de passe). Rendu
+logiciel (Xvfb) : plus lent que l’éditeur natif.
 
 Checklist guidée de la 1re heure → [§4](#4-première-séance-checklist).
 
@@ -212,13 +223,14 @@ Fichiers **générés / locaux** à ne pas versionner inutilement : `.env`,
 
 ## 6. Réseau Docker et ports
 
-### Pourquoi 6600–6605 ?
+### Pourquoi 6600–6606 ?
 
 Sur la machine de labo, les ports classiques (`5432`, `6379`, `8080`, `3000`)
 étaient déjà pris par d’autres stacks. Compose aurait échoué avec
 `port is already allocated`.
 
-Le bloc **6600–6605** regroupe les six services de façon lisible. Seuls les
+Le bloc **6600–6606** regroupe les services de façon lisible (6606 = profil
+`editor` optionnel). Seuls les
 ports **publiés sur l’hôte** changent. À l’intérieur de Docker, on garde les
 ports standards et on parle par **nom de service** :
 
@@ -235,6 +247,7 @@ BACKEND_PORT=6602
 FRONTEND_PORT=6603
 GODOT_PORT=6604
 WEBCLIENT_PORT=6605
+GODOT_EDITOR_PORT=6606
 ```
 
 Après modification : `docker compose up -d` (pas besoin de rebuild sauf change
@@ -355,7 +368,15 @@ Voir [§11 Frontend Nuxt](#11-frontend-nuxt).
 - [`godot/Caddyfile`](../godot/Caddyfile) :
   - fichiers statiques + `Cache-Control: no-store`
   - COOP/COEP (prêt pour export *threads*)
-  - `reverse_proxy /ws` → `godot:8999` avec **strip** de cookies / headers lourds
+  - handshake WebSocket sur `/ws` → `godot:8999` avec **strip** de cookies /
+    headers lourds ; requête HTTP simple sur `/ws` → **426** (pas un 502 Godot)
+
+### 7.7 Éditeur Godot noVNC (`godot-editor`, profil `editor`)
+
+- Image dérivée de `godot-ci:4.7.2` + Xvfb + noVNC (`godot/Dockerfile.editor`)
+- **Non** démarré par `docker compose up -d` seul : `--profile editor`
+- Port hôte **6606** → noVNC **6080** ; projet monté `./godot` → `/project`
+- Dev labo uniquement (VNC sans mot de passe)
 
 Régénérer le build après modif jeu :
 
@@ -396,11 +417,12 @@ Hors navigateur (éditeur / CLI) : connexion **directe** `ws://127.0.0.1:6604`.
 
 ## 9. Le jeu Godot en détail
 
-### Trois « Godot » à ne pas confondre
+### Les rôles Godot à ne pas confondre
 
 | Chose | Quoi | URL ? |
 |-------|------|-------|
-| Éditeur | App bureau pour éditer scènes / scripts | Non |
+| Éditeur natif | App bureau pour éditer scènes / scripts | `godot --path godot -e` |
+| Éditeur noVNC | Conteneur `godot-editor` (profil `editor`) | http://localhost:6606/vnc.html |
 | Serveur dédié | Conteneur `godot` headless | `ws://…:6604` (brut, pas HTTP) |
 | Client HTML5 | Export Web servi par Caddy | http://localhost:6605 |
 
@@ -541,7 +563,7 @@ Lisez-la avant de « simplifier » la config.
 | Piège | Symptôme | Règle |
 |-------|----------|--------|
 | Pas de `.env` / variables manquantes | User/DB inattendus (`game_user`/`game_db`) | Toujours `cp .env.example .env` ; Compose a d’autres defaults |
-| Ports 5432/6379/8080/3000 | `port is already allocated` | Garder 6600–6605 via `.env` |
+| Ports 5432/6379/8080/3000 | `port is already allocated` | Garder 6600–6606 via `.env` |
 | Volume PG sur `…/data` | Conteneur PG18 refuse de démarrer | Monter `/var/lib/postgresql` |
 | `version: '3.8'` en tête Compose | Warning Compose v2 | Utiliser `name: projet-6tt` |
 | Init SQL modifié + `restart` | Ancien schéma | `down -v` puis `up` |
@@ -553,6 +575,7 @@ Lisez-la avant de « simplifier » la config.
 |-------|----------|--------|
 | `--main-pack project.godot` | Échec démarrage | `--headless --path /project` |
 | Connexion navigateur → `:6604` | « serveur injoignable », logs vides | Passer par `/ws` (même origine) |
+| Ouvrir `/ws` en HTTP dans le navigateur | **426** Caddy | Normal ; le jeu ouvre un WebSocket depuis `index.html` |
 | Cookies localhost trop gros | 502 Caddy après ~3 s | Garder `header_up -Cookie` etc. |
 | Godot ne log pas les handshakes ratés | Journal serveur vide | Regarder `logs webclient` |
 | Réutiliser un peer WS échoué | Plus jamais de reconnexion | Nouveau peer à chaque essai |

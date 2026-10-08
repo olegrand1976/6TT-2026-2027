@@ -43,18 +43,29 @@
 	# navigateur un peu ancien franchit la limite. Symptome : 502 apres 3 s
 	# (le timeout de handshake de Godot) et « serveur injoignable » cote client.
 	# Aucun de ces en-tetes n'a d'utilite pour le serveur de jeu.
+	# Requete HTTP simple sur /ws (curl, barre d'adresse) : ne pas proxyer vers Godot
+	# (sinon 502 + « Invalid method or HTTP version » cote serveur WS).
+	@wsUpgrade {
+		path /ws
+		header Connection *Upgrade*
+	}
+	handle @wsUpgrade {
+		reverse_proxy godot:8999 {
+			header_up -Cookie
+			header_up -Accept-Language
+			header_up -Accept-Encoding
+			header_up -Sec-Websocket-Extensions
+			header_up -Pragma
+			header_up -Cache-Control
+			header_up -User-Agent
+			header_up -X-Forwarded-For
+			header_up -X-Forwarded-Proto
+			header_up -X-Forwarded-Host
+		}
+	}
 	@ws path /ws
-	reverse_proxy @ws godot:8999 {
-		header_up -Cookie
-		header_up -Accept-Language
-		header_up -Accept-Encoding
-		header_up -Sec-Websocket-Extensions
-		header_up -Pragma
-		header_up -Cache-Control
-		header_up -User-Agent
-		header_up -X-Forwarded-For
-		header_up -X-Forwarded-Proto
-		header_up -X-Forwarded-Host
+	handle @ws {
+		respond "Connexion WebSocket requise — le jeu utilise ws://…/ws depuis index.html, pas une page HTTP." 426
 	}
 
 	file_server

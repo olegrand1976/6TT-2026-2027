@@ -9,16 +9,17 @@ Contexte pour agents IA (Cursor / Claude Code) sur ce dépôt.
 ## Ce qu'est le projet
 
 Environnement de test conteneurisé pour un jeu de course 2D multijoueur. Six
-services orchestrés par Docker Compose :
+services Compose (+ éditeur optionnel profil `editor`) :
 
-| Service     | Techno                          | Port hôte | Port interne |
-|-------------|---------------------------------|-----------|--------------|
-| `postgres`  | pgvector/pgvector:0.8.6-pg18    | 6600      | 5432         |
-| `redis`     | redis:8.8-alpine                | 6601      | 6379         |
-| `backend`   | Go 1.27.1 + Air                 | 6602      | 8080         |
-| `frontend`  | Nuxt 3 + Tailwind (node 24)     | 6603      | 3000         |
-| `godot`     | Godot 4.7.2 headless            | 6604      | 8999         |
-| `webclient` | Caddy 2.11 (client HTML5)       | 6605      | 80           |
+| Service        | Techno                          | Port hôte | Port interne |
+|----------------|---------------------------------|-----------|--------------|
+| `postgres`     | pgvector/pgvector:0.8.6-pg18    | 6600      | 5432         |
+| `redis`        | redis:8.8-alpine                | 6601      | 6379         |
+| `backend`      | Go 1.27.1 + Air                 | 6602      | 8080         |
+| `frontend`     | Nuxt 3 + Tailwind (node 24)     | 6603      | 3000         |
+| `godot`        | Godot 4.7.2 headless            | 6604      | 8999         |
+| `webclient`    | Caddy 2.11 (client HTML5)       | 6605      | 80           |
+| `godot-editor` | noVNC + Xvfb (profil `editor`)  | 6606      | 6080         |
 
 **Dev only** : hot-reload, CORS `*`, ports BDD exposés. Le jeu (WS) et l’API Go
 ne sont **pas encore** branchés bout-en-bout (Godot loggue `BACKEND_URL` seulement).
@@ -96,8 +97,13 @@ serveur WS Godot coupe si le handshake dépasse ~4 Ko (cookies `localhost` des
 autres services). Ne pas retirer ces directives.
 
 Godot **ne journalise pas** les handshakes échoués : journal serveur vide ≠
-trafic absent — vérifier `docker compose logs webclient` (502 après ~3 s).
+trafic absent — vérifier `docker compose logs webclient` (502 après ~3 s si
+handshake trop lourd ; **426** si requête HTTP simple sur `/ws`, normal).
 Diagnostic : `?port=NNNN`, `/diag.html`.
+
+**Éditeur Docker (optionnel)** : `docker compose --profile editor up -d
+godot-editor` → http://localhost:6606/vnc.html. Préférer l’éditeur hôte :
+`godot --path godot -e`.
 
 **Reconnexion** toutes les 3 s avec un **nouveau** `WebSocketMultiplayerPeer`.
 Signaux MultiplayerAPI branchés **une fois**, avant la première tentative.

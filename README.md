@@ -36,6 +36,7 @@ Premier lancement : ~3–5 min (image Godot ~2 Go + npm).
 | PostgreSQL | `localhost:6600` | Données + recherche vectorielle |
 | Redis | `localhost:6601` | Compteurs temps réel |
 | Godot WS | `ws://localhost:6604` | Serveur de jeu (WebSocket brut, pas HTTP) |
+| Godot éditeur (noVNC) | http://localhost:6606/vnc.html | Profil Docker `editor` (voir ci-dessous) |
 
 - Dashboard : bandeau **STACK OPERATIONNELLE** si Postgres, pgvector et Redis OK.
 - Jeu : flèches pour conduire ; plusieurs onglets = multijoueur.
@@ -43,14 +44,27 @@ Premier lancement : ~3–5 min (image Godot ~2 Go + npm).
 
 ---
 
-## Ports 6600–6605
+## Éditeur Godot dans Docker (port 6606)
+
+Service **optionnel** (noVNC + Xvfb, dev labo uniquement) :
+
+```bash
+docker compose --profile editor up -d godot-editor
+```
+
+Puis http://localhost:6606/vnc.html — même projet monté que le serveur (`./godot`).
+L’éditeur natif reste préférable : `godot --path godot -e`.
+
+---
+
+## Ports 6600–6606
 
 Les ports classiques (`5432`, `6379`, `8080`, `3000`) sont souvent **déjà pris**
 sur la machine de labo. Seuls les ports **hôte** sont remappés ; en réseau
 Docker on garde `postgres:5432`, `redis:6379`, `backend:8080`, `godot:8999`.
 
 Variables dans `.env` : `POSTGRES_PORT`, `REDIS_PORT`, `BACKEND_PORT`,
-`FRONTEND_PORT`, `GODOT_PORT`, `WEBCLIENT_PORT`.
+`FRONTEND_PORT`, `GODOT_PORT`, `WEBCLIENT_PORT`, `GODOT_EDITOR_PORT`.
 
 Détail et schéma réseau → [Guide élèves §6](docs/GUIDE-ELEVES.md#6-réseau-docker-et-ports).
 
