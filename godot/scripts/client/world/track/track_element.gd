@@ -164,6 +164,9 @@ func _apply_curbs() -> void:
 	if outer == null or inner == null:
 		return
 	var tex := _resolved_texture(TEX_KERB)
+	var start_angle := _kerb_start_angle(outer, tex, Track.OUTER)
+	var outer_pts := Track.ellipse_points(Track.OUTER, 96, start_angle)
+	var inner_pts := Track.ellipse_points(Track.INNER, 96, start_angle)
 	for line in [outer, inner]:
 		line.texture = tex
 		line.texture_mode = Line2D.LINE_TEXTURE_TILE
@@ -171,8 +174,25 @@ func _apply_curbs() -> void:
 		line.closed = true
 		line.joint_mode = Line2D.LINE_JOINT_ROUND
 		apply_modulate(line, Track.KERB)
-	outer.points = Track.ellipse_points(Track.OUTER)
-	inner.points = Track.ellipse_points(Track.INNER)
+	outer.points = outer_pts
+	inner.points = inner_pts
+
+
+## Décale le début de l'ellipse pour rapprocher la phase du carrelage kerb de la grille monde.
+static func _kerb_start_angle(line: Line2D, tex: Texture2D, radii: Vector2) -> float:
+	if tex == null:
+		return 0.0
+	var tile := texture_size(tex)
+	if tile.x <= 0.0:
+		return 0.0
+	var anchor := line.to_global(Vector2(radii.x, 0.0))
+	var phase_px := fmod(anchor.x, tile.x)
+	if phase_px < 0.0:
+		phase_px += tile.x
+	var avg_r := (radii.x + radii.y) * 0.5
+	if avg_r <= 0.0:
+		return 0.0
+	return phase_px / avg_r
 
 
 func _apply_start_line() -> void:

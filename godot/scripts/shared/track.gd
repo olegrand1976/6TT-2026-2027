@@ -46,9 +46,9 @@ static func spawn_heading() -> float:
 
 
 ## Points d'une ellipse, pour le rendu et rien d'autre.
-static func ellipse_points(radii: Vector2, segments: int = 96) -> PackedVector2Array:
+static func ellipse_points(radii: Vector2, segments: int = 96, start_angle: float = 0.0) -> PackedVector2Array:
 	var points := PackedVector2Array()
 	for i in segments:
-		var a := TAU * float(i) / float(segments)
+		var a := start_angle + TAU * float(i) / float(segments)
 		points.push_back(Vector2(cos(a) * radii.x, sin(a) * radii.y))
 	return points

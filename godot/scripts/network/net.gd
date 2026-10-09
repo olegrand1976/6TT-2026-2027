@@ -12,6 +12,7 @@ extends Node
 ## Simulation réseau à pas fixe (indépendant du FPS d'affichage).
 const TICK_RATE := 30.0
 const STEP := 1.0 / TICK_RATE
+const DEFAULT_CAR_SPECS: CarSpecs = preload("res://resources/cars/default_car.tres")
 
 ## Emis sur le client a chaque instantane recu du serveur.
 signal snapshot_received
@@ -24,6 +25,8 @@ var cars: Dictionary = {}
 var _inputs: Dictionary = {}
 ## Serveur : ordre d'arrivee, pour attribuer les places sur la grille.
 var _grid_index: Dictionary = {}
+## Serveur : peer_id -> profil gameplay (même `.tres` que le client par défaut).
+var _specs_by_peer: Dictionary = {}
 
 ## Client : dernier instantane recu, peer_id -> CarState.
 var remote_cars: Dictionary = {}
@@ -55,12 +58,18 @@ func add_car(peer_id: int) -> void:
 	car.reset(_grid_index.get(peer_id, cars.size()))
 	cars[peer_id] = car
 	_inputs[peer_id] = Vector2.ZERO
+	_specs_by_peer[peer_id] = DEFAULT_CAR_SPECS
 
 
 func remove_car(peer_id: int) -> void:
 	cars.erase(peer_id)
 	_inputs.erase(peer_id)
 	_grid_index.erase(peer_id)
+	_specs_by_peer.erase(peer_id)
+
+
+func car_specs_for(peer_id: int) -> CarSpecs:
+	return _specs_by_peer.get(peer_id, DEFAULT_CAR_SPECS) as CarSpecs
 
 
 func reserve_grid_slot(peer_id: int) -> void:
@@ -80,8 +89,9 @@ func _server_tick() -> void:
 	_tick += 1
 	ensure_obstacles_loaded()
 	for peer_id in cars:
-		CarPhysics.step(cars[peer_id], _inputs.get(peer_id, Vector2.ZERO), STEP)
-	TrackCollision.resolve_tick(cars, _obstacles)
+		var specs := car_specs_for(peer_id)
+		CarPhysics.step(cars[peer_id], _inputs.get(peer_id, Vector2.ZERO), STEP, specs)
+	TrackCollision.resolve_tick(cars, _obstacles, _specs_by_peer)
 
 	if cars.is_empty():
 		return

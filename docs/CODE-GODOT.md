@@ -111,7 +111,7 @@ Ordre recommandé : **valider le refactor → commit → dettes gameplay / visue
 
 | # | Sujet | État | Action |
 |---|--------|------|--------|
-| A1 | **Refactor scènes-first** | Non commité sur `feat/evo-rac6tt` | Commit : scènes `elements/*.tscn` → `track_element.gd` unique ; `car_view.gd` centralise les pièces ; suppression `world.gd` / `track_root.gd` / `elements/*.gd` / `car_part*.gd` ; doc `CODE-GODOT.md` + commentaires scripts. |
+| A1 | **Refactor scènes-first** | Fait (`0189a85`) | Scènes `elements/*.tscn` → `track_element.gd` unique ; `car_view.gd` centralise les pièces ; suppression anciens scripts couche piste / voiture. |
 | A2 | **Cache éditeur / LSP** | Corrigé dans le dépôt, à refaire localement | Après pull : reload projet + `godot --headless --path godot --import --quit` (voir section Dépannage ci-dessus). |
 | A3 | **Export web** | Après A1 | `./godot/export-web.sh` puis test `http://localhost:6605`. |
 
@@ -121,9 +121,9 @@ Ordre recommandé : **valider le refactor → commit → dettes gameplay / visue
 
 | # | Sujet | Impact | Piste d’implémentation |
 |---|--------|--------|-------------------------|
-| B1 | **`CarPhysics.step` sans `CarSpecs` par pilote (serveur)** | Tous les pilotes partagent les constantes par défaut ; le client affiche déjà des tailles via `default_car.tres`. | Dans `net.gd` → `_server_tick` : associer `peer_id` → `CarSpecs` (Resource ou `.tres` par slot) ; appeler `CarPhysics.step(car, input, STEP, specs)`. Option : même `.tres` que `car_view.tscn` pour cohérence visuel / gameplay. |
-| B2 | **Kerbs `Line2D` : tiling le long du tracé** | Les bordures (`CURBS`) utilisent `LINE_TEXTURE_TILE` le long de l’ellipse ; herbe / bitume / terre utilisent une **grille monde** (`draw_world_tiled_rect` + UV ellipse). Léger décalage visuel possible entre kerbs et surfaces — **cosmétique**. | Amélioration optionnelle : phase UV le long de l’arc (`Line2D` texture offset) ou shader ; documenter comme « bon assez » pour le cours si non traité. |
-| B3 | **`TrackCollision.CAR_RADIUS` fixe** | Hitbox voiture ≠ `CarSpecs.body_width` côté serveur. | Dériver le rayon de `CarSpecs` (ou constante documentée) lors du branchement B1. |
+| B1 | **`CarSpecs` par pilote (serveur)** | Fait | `net.gd` : `_specs_by_peer` + `default_car.tres` ; `CarPhysics.step(..., specs)` dans `_server_tick`. Exercice élève : `.tres` différent par slot. |
+| B2 | **Kerbs `Line2D` : phase texture** | Fait (cosmétique) | `track_element.gd` : `start_angle` sur `Track.ellipse_points` (Godot 4.7 n’expose pas `Line2D.texture_offset`). |
+| B3 | **`TrackCollision.CAR_RADIUS` fixe** | Fait (avec B1) | `CarSpecs.collision_radius()` ; `resolve_tick(..., specs_by_peer)`. `CAR_RADIUS` = fallback sans specs. |
 
 ### Phase C — Hors Godot (rappel)
 
@@ -132,7 +132,7 @@ Ordre recommandé : **valider le refactor → commit → dettes gameplay / visue
 
 ### Checklist avant merge `feat/evo-rac6tt`
 
-- [ ] `git status` propre après commit phase A  
+- [x] Commit phase A + phase B (gameplay / kerbs)  
 - [ ] Client headless 200 frames sans erreur script  
 - [ ] Serveur `--quit-after 120 -- --server` → log obstacles  
 - [ ] README Godot + GUIDE-ELEVES + CODE-GODOT alignés  

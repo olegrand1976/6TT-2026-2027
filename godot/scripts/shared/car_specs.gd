@@ -1,7 +1,7 @@
 ## Profil voiture (fichier `.tres` éditable dans Godot).
 ##
 ## Côté client : `car_view.gd` lit dimensions / apparence.
-## Côté serveur : brancher la même Resource dans `CarPhysics.step(..., specs)` (TODO net.gd).
+## Côté serveur : `net.gd` passe la même Resource à `CarPhysics.step` et aux collisions.
 ##
 ## Les défauts gameplay reprennent `CarPhysics` pour une seule source de vérité.
 class_name CarSpecs
@@ -25,3 +25,8 @@ extends Resource
 @export var accel := CarPhysics.ACCEL
 @export var brake := CarPhysics.BRAKE
 @export var turn_rate := CarPhysics.TURN_RATE
+
+
+## Rayon hitbox serveur (cercle) — aligné dimensions + `TrackCollision`.
+func collision_radius() -> float:
+	return maxf(body_length, body_width) * 0.5
