@@ -1,7 +1,11 @@
 # Parcours exemples Godot & Rac6TT
 
 Neuf modules : labs stack (01–04, 06–07) + mini-projets Godot 4.7.2 (05, 08, 09).
+Chaque dossier contient un **`project.godot`** (labs = écran d’accueil + README ; 05/08/09 = jeux).
 Chaque mini-projet Godot a un **`docker-compose.yml`** (`import` ; serveur **09** sur **8970**).
+
+**Ouvrir dans Godot 4.7.2** : choisir le **dossier du module** (pas seulement `exemples/`), ex. `exemples/godot/05-mouvement-2d`.
+Éditeur Docker (6606) : **`/project/exemples-godot/05-mouvement-2d`** (après `docker compose up`).
 
 | # | Dossier | Thème ado | Type |
 |---|---------|-----------|------|

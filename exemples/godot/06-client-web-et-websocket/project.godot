@@ -1,0 +1,19 @@
+; Lab Rac6TT — ouverture éditeur (voir README.md)
+config_version=5
+
+[application]
+
+config/name="Lab 06 — Client web et WebSocket"
+config/description="Travail : README.md, export web et proxy Caddy /ws."
+run/main_scene="res://scenes/lab_main.tscn"
+config/features=PackedStringArray("4.7")
+config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=800
+window/size/viewport_height=480
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"

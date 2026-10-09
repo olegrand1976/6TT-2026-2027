@@ -192,6 +192,8 @@ services:
       EDITOR_NUMLOCK: ${EDITOR_NUMLOCK:-on}
     volumes:
       - ./godot:/project
+      # Parcours exemples (labs + 05/08/09) visibles dans l'éditeur noVNC
+      - ./exemples/godot:/project/exemples-godot
       - ./godot/.docker/editor-home:/editor-home
     depends_on:
       godot-prepare:

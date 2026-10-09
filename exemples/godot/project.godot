@@ -1,0 +1,26 @@
+; Parcours exemples Godot — dossier racine du parcours (labs + mini-projets 05/08/09)
+config_version=5
+
+[application]
+
+config/name="Parcours exemples Godot Rac6TT"
+config/description="Index du parcours dans exemples/godot/.
+
+• Labs (README + stack Docker) : 01 à 04, 06, 07
+• Mini-projets Godot jouables : 05-mouvement-2d, 08-course-locale, 09-reseau-minimal
+
+Pour éditer un mini-projet : Projet → Ouvrir un projet… et choisir le sous-dossier (ex. 05-mouvement-2d).
+
+Éditeur Docker (6606) : les exemples sont sous /project/exemples-godot/"
+run/main_scene="res://scenes/parcours_main.tscn"
+config/features=PackedStringArray("4.7")
+config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=960
+window/size/viewport_height=540
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
