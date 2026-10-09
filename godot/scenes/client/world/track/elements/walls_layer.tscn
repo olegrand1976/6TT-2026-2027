@@ -1,11 +1,8 @@
 [gd_scene load_steps=2 format=3 uid="uid://b6ttelwalls"]
 
-[ext_resource type="PackedScene" uid="uid://b6ttelwallseg" path="res://scenes/client/world/track/elements/wall_segment.tscn" id="2_wall"]
+[ext_resource type="PackedScene" uid="uid://b6ttelwalledges" path="res://scenes/client/world/track/elements/wall_edges.tscn" id="1_edges"]
 
 [node name="Walls" type="Node2D"]
-z_index = -20
+z_index = -23
 
-[node name="WallNorth" parent="." instance=ExtResource("2_wall")]
-position = Vector2(0, -520)
-rotation = 1.5707964
-length = 120.0
+[node name="WallEdges" parent="." instance=ExtResource("1_edges")]

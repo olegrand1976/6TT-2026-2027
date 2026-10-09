@@ -13,5 +13,4 @@ surface_texture = ExtResource("2_tex")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 
 [node name="Collision" parent="." instance=ExtResource("3_col")]
-position = Vector2(0, -42)
-radius = 26.0
+radius = 22.0

@@ -5,6 +5,7 @@
 [node name="FollowCamera" type="Camera2D"]
 position_smoothing_enabled = true
 position_smoothing_speed = 10.0
-zoom = Vector2(0.85, 0.85)
 script = ExtResource("1_cam")
+auto_fit_track = true
+fit_padding = 1.1
 track_center_influence = 0.15

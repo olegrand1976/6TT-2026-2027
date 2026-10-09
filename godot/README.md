@@ -2,6 +2,19 @@
 
 **Principe pédagogique** : ouvrir les **scènes** dans l’éditeur (nœuds, textures, exports). Les **scripts** restent pour le réseau, la physique et le minimum de glue visuelle.
 
+## Voir le circuit dans l’éditeur
+
+| Scène | Contenu |
+|-------|---------|
+| `scenes/network/net.tscn` | **Réseau seulement** (nœud `Net`) — viewport **vide**, normal. |
+| `scenes/client/world/track/track.tscn` | **Circuit complet** (herbe, bitume, kerbs, murs, décor). |
+| `scenes/client/world/world.tscn` | Piste + couche voitures + caméra. |
+| `scenes/main.tscn` | Point d’entrée jeu (**F5**). |
+
+Les éléments piste utilisent `track_element.gd` avec `@tool` : le rendu se met à jour dans l’éditeur dès l’ouverture de `track.tscn`.
+
+**Caméra** : `FollowCamera` calcule le zoom pour cadrer `Track.OUTER` (`auto_fit_track`, `fit_padding`) ; recalcul si la fenêtre est redimensionnée.
+
 ## Arborescence
 
 ```text
@@ -33,6 +46,7 @@ Chaque `elements/*.tscn` référence **`track_element.gd`** avec un **`kind`** d
 | `grass` | GRASS | (dessin sur le nœud racine) |
 | `asphalt` / `dirt` | ELLIPSE_SURFACE | `Polygon2D` + `ellipse_kind` + `ellipse_radii` |
 | `curbs` | CURBS | `OuterKerb` / `InnerKerb` (Line2D) |
+| `wall_edges` | WALL_EDGES | `OuterWall` / `InnerWall` (Line2D) |
 | `start_line` | START_LINE | `Sprite2D` |
 | `tree` / `rock` | SPRITE_DECOR | `Sprite2D` + `Collision/` |
 | `wall_segment` | WALL_SEGMENT | `Sprite2D` + `length` / `thickness` |

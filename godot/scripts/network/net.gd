@@ -7,6 +7,9 @@
 ##   serveur → `CarPhysics` + collisions → `snapshot` (toutes les voitures)
 ##
 ## Voir aussi : docs/CODE-GODOT.md (boucle 30 Hz).
+##
+## Pas de graphisme : pour voir la piste dans l'éditeur, ouvrir
+## `scenes/client/world/track/track.tscn` (ou `world.tscn` / `client.tscn`).
 extends Node
 
 ## Simulation réseau à pas fixe (indépendant du FPS d'affichage).

@@ -9,6 +9,7 @@
 ## Le serveur **ne lit pas** ce script : il scanne les `TrackCollisionMarker` dans l'arbre.
 ##
 ## `_set` : permet de voir le changement de texture/couleur dans l'éditeur sans relancer.
+@tool
 class_name TrackElement
 extends Node2D
 
@@ -19,6 +20,8 @@ enum Kind {
 	START_LINE,
 	SPRITE_DECOR,
 	WALL_SEGMENT,
+	## Murs le long des ellipses intérieure / extérieure (`OuterWall` / `InnerWall` Line2D).
+	WALL_EDGES,
 }
 
 enum EllipseKind {
@@ -138,6 +141,8 @@ func _apply_visual() -> void:
 			_apply_sprite_decor()
 		Kind.WALL_SEGMENT:
 			_apply_wall_segment()
+		Kind.WALL_EDGES:
+			_apply_wall_edges()
 		_:
 			assert(false, "TrackElement.Kind inconnu : %d" % int(kind))
 
@@ -174,6 +179,26 @@ func _apply_curbs() -> void:
 		line.closed = true
 		line.joint_mode = Line2D.LINE_JOINT_ROUND
 		apply_modulate(line, Track.KERB)
+	outer.points = outer_pts
+	inner.points = inner_pts
+
+
+func _apply_wall_edges() -> void:
+	var outer := get_node_or_null("OuterWall") as Line2D
+	var inner := get_node_or_null("InnerWall") as Line2D
+	if outer == null or inner == null:
+		return
+	var tex := _resolved_texture(TEX_WALL)
+	var start_angle := _kerb_start_angle(outer, tex, Track.OUTER)
+	var outer_pts := Track.ellipse_points(Track.OUTER, 96, start_angle)
+	var inner_pts := Track.ellipse_points(Track.INNER, 96, start_angle)
+	for line in [outer, inner]:
+		line.texture = tex
+		line.texture_mode = Line2D.LINE_TEXTURE_TILE
+		line.width = 10.0
+		line.closed = true
+		line.joint_mode = Line2D.LINE_JOINT_ROUND
+		apply_modulate(line, Track.WALL)
 	outer.points = outer_pts
 	inner.points = inner_pts
 
@@ -220,9 +245,15 @@ func _apply_sprite_decor() -> void:
 	spr.centered = true
 	spr.scale = Vector2.ONE * scale_factor
 	if sprite_feet_on_ground:
+		# PNG « profil » : n'afficher que la couronne (vue du dessus).
 		var size := texture_size(tex)
-		spr.offset = Vector2(0.0, -size.y * 0.5)
+		const CROWN_HEIGHT_RATIO := 0.58
+		var crown_h := size.y * CROWN_HEIGHT_RATIO
+		spr.region_enabled = true
+		spr.region_rect = Rect2(0.0, 0.0, size.x, crown_h)
+		spr.offset = Vector2.ZERO
 	else:
+		spr.region_enabled = false
 		spr.offset = Vector2.ZERO
 	var palette := Track.TREE_CROWN if sprite_feet_on_ground else Track.ROCK
 	apply_modulate(spr, palette)
