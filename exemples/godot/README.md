@@ -5,7 +5,7 @@ Chaque dossier contient un **`project.godot`** (labs = écran d’accueil + READ
 Chaque mini-projet Godot a un **`docker-compose.yml`** (`import` ; serveur **09** sur **8970**).
 
 **Ouvrir dans Godot 4.7.2** : choisir le **dossier du module** (pas seulement `exemples/`), ex. `exemples/godot/05-mouvement-2d`.
-Éditeur Docker (6606) : **`/project/exemples-godot/05-mouvement-2d`** (après `docker compose up`).
+Éditeur Docker (6606) : **`/exemples-godot/05-mouvement-2d`** (*Projet → Ouvrir…* — pas dans `res://` du jeu Rac6TT).
 
 | # | Dossier | Thème ado | Type |
 |---|---------|-----------|------|

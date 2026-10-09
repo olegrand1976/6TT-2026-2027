@@ -11,7 +11,7 @@ config/description="Index du parcours dans exemples/godot/.
 
 Pour éditer un mini-projet : Projet → Ouvrir un projet… et choisir le sous-dossier (ex. 05-mouvement-2d).
 
-Éditeur Docker (6606) : les exemples sont sous /project/exemples-godot/"
+Éditeur Docker (6606) : les exemples sont sous /exemples-godot/ (hors res:// Rac6TT)."
 run/main_scene="res://scenes/parcours_main.tscn"
 config/features=PackedStringArray("4.7")
 config/icon="res://icon.svg"

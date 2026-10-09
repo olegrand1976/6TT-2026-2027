@@ -19,7 +19,7 @@ static func is_on_asphalt(p: Vector2) -> bool:
 
 static func spawn_point(index: int) -> Vector2:
 	var column := index % 2
-	var row := (index // 2) % 5
+	var row := int(index / 2) % 5
 	return Vector2(460.0 - float(column) * 60.0, -30.0 - float(row) * 45.0)
 
 

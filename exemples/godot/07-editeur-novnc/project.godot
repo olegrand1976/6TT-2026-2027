@@ -4,7 +4,7 @@ config_version=5
 [application]
 
 config/name="Lab 07 — Éditeur noVNC"
-config/description="Travail : README.md, port 6606. Exemples : /project/exemples-godot/ dans Docker."
+config/description="Travail : README.md, port 6606. Exemples : /exemples-godot/ dans Docker (Projet → Ouvrir…)."
 run/main_scene="res://scenes/lab_main.tscn"
 config/features=PackedStringArray("4.7")
 config/icon="res://icon.svg"
