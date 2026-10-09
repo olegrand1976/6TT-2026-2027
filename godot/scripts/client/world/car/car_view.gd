@@ -15,7 +15,7 @@ func _ready() -> void:
 		specs = preload("res://resources/cars/default_car.tres") as CarSpecs
 	_collect_parts()
 	for part in _parts:
-		part.refresh()
+		part.update_visuals()
 
 
 func _collect_parts() -> void:
@@ -40,4 +40,4 @@ func update_appearance(car: CarState, is_local: bool) -> void:
 	paint_color = color
 	is_local_player = is_local
 	for part in _parts:
-		part.refresh()
+		part.update_visuals()

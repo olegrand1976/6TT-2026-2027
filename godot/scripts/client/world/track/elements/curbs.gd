@@ -1,18 +1,20 @@
 extends TrackElement
 
+const DEFAULT_TEXTURE := preload("res://assets/track/kerb.png")
+
+@onready var _outer: Line2D = $OuterKerb
+@onready var _inner: Line2D = $InnerKerb
+
 
 func _ready() -> void:
 	z_index = -22
-
-
-func _draw() -> void:
-	var color := resolved_color(Track.KERB)
-	draw_polyline(_closed(Track.ellipse_points(Track.OUTER)), color, 3.0, true)
-	draw_polyline(_closed(Track.ellipse_points(Track.INNER)), color, 3.0, true)
-
-
-static func _closed(points: PackedVector2Array) -> PackedVector2Array:
-	var closed := PackedVector2Array(points)
-	if points.size() > 0:
-		closed.push_back(points[0])
-	return closed
+	var tex := surface_texture if surface_texture != null else DEFAULT_TEXTURE
+	for line in [_outer, _inner]:
+		line.texture = tex
+		line.texture_mode = Line2D.LINE_TEXTURE_TILE
+		line.width = 8.0
+		line.closed = true
+		line.joint_mode = Line2D.LINE_JOINT_ROUND
+		apply_modulate(line, Track.KERB)
+	_outer.points = Track.ellipse_points(Track.OUTER)
+	_inner.points = Track.ellipse_points(Track.INNER)

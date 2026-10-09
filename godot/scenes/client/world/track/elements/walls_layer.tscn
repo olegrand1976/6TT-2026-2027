@@ -1,6 +1,12 @@
-[gd_scene load_steps=2 format=3 uid="uid://b6ttelwalls"]
+[gd_scene load_steps=3 format=3 uid="uid://b6ttelwalls"]
 
 [ext_resource type="Script" path="res://scripts/client/world/track/elements/walls_layer.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://b6ttelwallseg" path="res://scenes/client/world/track/elements/wall_segment.tscn" id="2_wall"]
 
 [node name="Walls" type="Node2D"]
 script = ExtResource("1")
+
+[node name="WallNorth" parent="." instance=ExtResource("2_wall")]
+position = Vector2(0, -520)
+rotation = 1.5707964
+length = 120.0

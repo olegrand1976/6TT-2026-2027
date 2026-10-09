@@ -1,6 +1,23 @@
-[gd_scene load_steps=2 format=3 uid="uid://b6tteldecor"]
+[gd_scene load_steps=4 format=3 uid="uid://b6tteldecor"]
 
 [ext_resource type="Script" path="res://scripts/client/world/track/elements/decorations_layer.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://b6tteltree" path="res://scenes/client/world/track/elements/tree.tscn" id="2_tree"]
+[ext_resource type="PackedScene" uid="uid://b6ttelrock" path="res://scenes/client/world/track/elements/rock.tscn" id="3_rock"]
 
 [node name="Decorations" type="Node2D"]
 script = ExtResource("1")
+
+[node name="TreeA" parent="." instance=ExtResource("2_tree")]
+position = Vector2(-420, 180)
+scale_factor = 1.1
+
+
+[node name="TreeB" parent="." instance=ExtResource("2_tree")]
+position = Vector2(380, -220)
+
+[node name="RockA" parent="." instance=ExtResource("3_rock")]
+position = Vector2(-300, -120)
+scale_factor = 1.3
+
+[node name="RockB" parent="." instance=ExtResource("3_rock")]
+position = Vector2(520, 90)

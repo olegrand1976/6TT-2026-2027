@@ -1,4 +1,4 @@
-## Pièce de voiture : lit les specs via le `Rac6ttCarView` propriétaire de la scène.
+## Pièce de voiture : sprites + specs via le `Rac6ttCarView` propriétaire.
 class_name CarPart
 extends Node2D
 
@@ -14,4 +14,8 @@ func _car_view() -> Rac6ttCarView:
 
 
 func refresh() -> void:
-	queue_redraw()
+	update_visuals()
+
+
+func update_visuals() -> void:
+	pass

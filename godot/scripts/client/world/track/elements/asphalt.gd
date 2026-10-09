@@ -1,9 +1,13 @@
 extends TrackElement
 
+const DEFAULT_TEXTURE := preload("res://assets/track/asphalt.png")
+
+@onready var _poly: Polygon2D = $Polygon2D
+
 
 func _ready() -> void:
 	z_index = -25
-
-
-func _draw() -> void:
-	draw_colored_polygon(Track.ellipse_points(Track.OUTER), resolved_color(Track.ASPHALT))
+	var tex := surface_texture if surface_texture != null else DEFAULT_TEXTURE
+	_poly.texture = tex
+	_poly.polygon = Track.ellipse_points(Track.OUTER)
+	apply_modulate(_poly, Track.ASPHALT)

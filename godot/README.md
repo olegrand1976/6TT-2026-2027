@@ -20,6 +20,7 @@ scenes/client/world/
     └── parts/ body · nose · wheels · local_ring
 
 resources/cars/default_car.tres       # CarSpecs (dimensions + gameplay ref.)
+assets/track/ · assets/car/           # PNG (remplaçables dans l’éditeur)
 scripts/shared/
 ├── track.gd                          # géométrie + palette (serveur & client)
 └── car_specs.gd                      # profil voiture (Resource)
@@ -37,7 +38,7 @@ scripts/shared/
 | `walls_layer` | Conteneur murs | -20 |
 | `decorations_layer` | Arbres, cailloux… | -18 |
 
-Chaque élément hérite de `TrackElement` : `@export var surface_color` + `use_track_default` pour surcharger la couleur sans code.
+Chaque élément a une **texture** (`assets/track/…`) visible sur un `Sprite2D` / `Polygon2D` / `Line2D` dans la scène. `TrackElement` : `surface_texture` + `use_track_default` pour teinter ou remplacer l’image.
 
 **Géométrie partagée** : `Track.OUTER` / `INNER` dans `scripts/shared/track.gd` (collisions serveur inchangées).
 
@@ -71,5 +72,6 @@ Doc : [docs/GUIDE-ELEVES.md](../docs/GUIDE-ELEVES.md) §9.
 ## Éditeur (Godot 4.7)
 
 - Scène principale : `res://scenes/main.tscn` (alias racine `res://main.tscn` pour compat).
-- Scripts : sous `res://scripts/…` — fermer les onglets obsolètes `res://main.gd` ou `res://shared/*`.
+- Code source : `res://scripts/…` (les fichiers à la racine `main.gd`, `net.gd`, `client/`, `server/` ne sont que des **alias** pour l’éditeur).
+- Fermer puis rouvrir un onglet si le LSP affiche encore d’anciennes lignes `preload("res://net.gd")`.
 - Si le LSP affiche encore d’anciennes erreurs : **Projet → Recharger le projet courant** ou supprimer le cache local `.godot/` puis rouvrir (réimport ~1 min).

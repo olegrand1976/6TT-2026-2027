@@ -1,13 +1,16 @@
 extends TrackElement
 
-@export var trunk_height := 18.0
-@export var trunk_width := 6.0
-@export var crown_radius := 22.0
+const DEFAULT_TEXTURE := preload("res://assets/track/tree.png")
+
+@export var scale_factor := 1.0
+
+@onready var _sprite: Sprite2D = $Sprite2D
 
 
-func _draw() -> void:
-	draw_rect(
-		Rect2(Vector2(-trunk_width * 0.5, -trunk_height), Vector2(trunk_width, trunk_height)),
-		resolved_color(Track.TREE_TRUNK),
-	)
-	draw_circle(Vector2(0.0, -trunk_height), crown_radius, resolved_color(Track.TREE_CROWN))
+func _ready() -> void:
+	var tex := surface_texture if surface_texture != null else DEFAULT_TEXTURE
+	_sprite.texture = tex
+	var size := TrackElement.texture_size(tex)
+	_sprite.scale = Vector2.ONE * scale_factor
+	_sprite.offset = Vector2(0.0, -size.y * 0.5 * scale_factor)
+	apply_modulate(_sprite, Track.TREE_CROWN)

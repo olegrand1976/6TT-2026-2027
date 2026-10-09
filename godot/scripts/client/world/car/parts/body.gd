@@ -1,19 +1,19 @@
 extends CarPart
 
+const DEFAULT_TEXTURE := preload("res://assets/car/body.png")
+const TEX_SIZE := Vector2(52.0, 28.0)
 
-func _draw() -> void:
+@onready var _sprite: Sprite2D = $Sprite2D
+
+
+func _ready() -> void:
+	_sprite.texture = DEFAULT_TEXTURE
+
+
+func update_visuals() -> void:
 	var view := _car_view()
 	if view == null:
 		return
 	var specs: CarSpecs = view.specs
-	var forward := Vector2.RIGHT
-	var side := forward.orthogonal()
-	var half_l: float = specs.body_length * 0.5
-	var half_w: float = specs.body_width * 0.5
-	var body := PackedVector2Array([
-		forward * half_l + side * half_w,
-		forward * half_l - side * half_w,
-		-forward * half_l - side * half_w,
-		-forward * half_l + side * half_w,
-	])
-	draw_colored_polygon(body, view.paint_color)
+	_sprite.modulate = view.paint_color
+	_sprite.scale = Vector2(specs.body_length / TEX_SIZE.x, specs.body_width / TEX_SIZE.y)
