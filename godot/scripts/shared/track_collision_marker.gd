@@ -1,5 +1,9 @@
-## Marqueur à placer sur une scène d'élément (arbre, rocher, mur…).
-## Le serveur parcourt la piste instanciée et collecte ces formes.
+## Marqueur de collision à placer dans l'éditeur (enfant `Collision/` des props).
+##
+## Élèves : déplacer l'arbre dans `decorations_layer.tscn` met à jour la position
+## au prochain démarrage serveur (`TrackCollision.load_obstacles_from_track`).
+##
+## `global_transform` est utilisé : le marqueur doit être dans l'arbre au scan.
 class_name TrackCollisionMarker
 extends Node2D
 

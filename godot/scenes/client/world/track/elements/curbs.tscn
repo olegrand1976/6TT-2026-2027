@@ -1,10 +1,12 @@
 [gd_scene load_steps=3 format=3 uid="uid://b6ttelcurb"]
 
-[ext_resource type="Script" path="res://scripts/client/world/track/elements/curbs.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/client/world/track/track_element.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/track/kerb.png" id="2_tex"]
 
 [node name="Curbs" type="Node2D"]
 script = ExtResource("1")
+kind = 2
+render_layer = -22
 surface_texture = ExtResource("2_tex")
 
 [node name="OuterKerb" type="Line2D" parent="."]

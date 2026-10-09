@@ -1,12 +1,15 @@
-## Couche reseau, partagee par le serveur et le client.
+## Couche réseau partagée (client + serveur) — cœur multijoueur du projet.
 ##
-## Ce noeud DOIT exister au meme chemin des deux cotes (/root/Main/Net) : Godot
-## route les RPC par chemin de noeud, un ecart ici et les appels sont silencieux.
+## Emplacement obligatoire : `/root/Main/Net` des deux côtés (sinon RPC silencieux).
 ##
-## Modele : le serveur fait autorite. Les clients n'envoient que leurs commandes
-## (`submit_input`), le serveur simule et renvoie l'etat complet (`snapshot`).
+## Modèle **autorité serveur** :
+##   client → `submit_input` (direction + gaz)
+##   serveur → `CarPhysics` + collisions → `snapshot` (toutes les voitures)
+##
+## Voir aussi : docs/CODE-GODOT.md (boucle 30 Hz).
 extends Node
 
+## Simulation réseau à pas fixe (indépendant du FPS d'affichage).
 const TICK_RATE := 30.0
 const STEP := 1.0 / TICK_RATE
 
@@ -34,6 +37,7 @@ var _obstacles_loaded := false
 
 
 func _process(delta: float) -> void:
+	# Accumulateur classique : plusieurs ticks si le rendu accroche, zéro si rapide.
 	_accumulator += delta
 	while _accumulator >= STEP:
 		_accumulator -= STEP
@@ -64,6 +68,7 @@ func reserve_grid_slot(peer_id: int) -> void:
 
 
 func ensure_obstacles_loaded() -> void:
+	# Instancie track.tscn une fois dans l'arbre pour lire les TrackCollisionMarker.
 	if _obstacles_loaded or not is_server:
 		return
 	_obstacles = TrackCollision.load_obstacles_from_track()

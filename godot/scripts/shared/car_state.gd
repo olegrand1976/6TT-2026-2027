@@ -39,7 +39,8 @@ func update_lap() -> void:
 		lap -= 1
 
 
-## Serialisation compacte pour le reseau : uniquement ce que le client affiche.
+## Format wire du snapshot : tableau fixe (6 valeurs) par voiture.
+## Ordre identique côté serveur (`net.gd`) et client (`from_wire`).
 func to_wire() -> Array:
 	return [peer_id, pos.x, pos.y, heading, speed, lap]
 

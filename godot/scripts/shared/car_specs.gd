@@ -1,7 +1,9 @@
-## Caractéristiques d'un modèle de voiture (Resource réutilisable).
+## Profil voiture (fichier `.tres` éditable dans Godot).
 ##
-## Les défauts gameplay reprennent `CarPhysics` pour éviter deux sources de vérité.
-## Côté serveur : passer la Resource à `CarPhysics.step(..., specs)`.
+## Côté client : `car_view.gd` lit dimensions / apparence.
+## Côté serveur : brancher la même Resource dans `CarPhysics.step(..., specs)` (TODO net.gd).
+##
+## Les défauts gameplay reprennent `CarPhysics` pour une seule source de vérité.
 class_name CarSpecs
 extends Resource
 

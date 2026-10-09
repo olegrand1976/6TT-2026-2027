@@ -1,4 +1,5 @@
-## Journalisation périodique côté serveur (Timer dans la scène).
+## Logs périodiques serveur (Timer dans `heartbeat_monitor.tscn`).
+## Utile en Docker : voir qu'il y a des pilotes sans ouvrir le jeu.
 extends Node
 
 const INTERVAL_SECONDS := 15.0

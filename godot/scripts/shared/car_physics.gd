@@ -36,6 +36,7 @@ static func step(car: CarState, input: Vector2, dt: float, specs: CarSpecs = nul
 	var steer := clampf(input.x, -1.0, 1.0)
 	var throttle := clampf(input.y, -1.0, 1.0)
 
+	# --- Accélération / frein ---
 	if throttle > 0.0:
 		car.speed += accel_rate * throttle * dt
 	elif throttle < 0.0:
@@ -47,7 +48,8 @@ static func step(car: CarState, input: Vector2, dt: float, specs: CarSpecs = nul
 
 	car.speed = clampf(car.speed, -max_reverse, max_speed)
 
-	# La voiture ne tourne que si elle roule, et s'inverse en marche arriere.
+	# --- Direction (grip ∝ vitesse) ---
+	# La voiture ne tourne que si elle roule, et s'inverse en marche arrière.
 	var grip := clampf(absf(car.speed) / GRIP_SPEED, 0.0, 1.0)
 	car.heading = wrapf(
 		car.heading + steer * turn_rate * grip * signf(car.speed) * dt, -PI, PI

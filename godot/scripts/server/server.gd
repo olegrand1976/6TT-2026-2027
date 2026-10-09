@@ -1,7 +1,7 @@
-## Serveur dedie headless.
+## Serveur dédié headless (conteneur Docker `godot`).
 ##
-## Ouvre le WebSocket, gere le cycle de vie des pilotes et journalise. La
-## simulation elle-meme vit dans Net, partage avec le client.
+## Rôle : ouvrir le WebSocket, connecter/déconnecter les pilotes dans `Net`.
+## La simulation 30 Hz est dans `net.gd` (`is_server = true`).
 extends Node
 
 var _peer := WebSocketMultiplayerPeer.new()

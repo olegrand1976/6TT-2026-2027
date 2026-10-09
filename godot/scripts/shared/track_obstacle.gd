@@ -1,4 +1,5 @@
-## Obstacle statique du circuit (source de vérité serveur).
+## Obstacle statique (donnée pure) produit par un `TrackCollisionMarker`.
+## Pas de nœud scène : liste en mémoire côté serveur (`net.gd`).
 class_name TrackObstacle
 extends Resource
 

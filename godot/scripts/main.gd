@@ -1,4 +1,7 @@
-## Point d'entree unique du projet.
+## Point d'entrée unique — choix client ou serveur au démarrage.
+##
+## Fichier lu par `project.godot` (main scene = scenes/main.tscn qui utilise ce script).
+## Voir docs/CODE-GODOT.md pour l'arbre complet.
 ##
 ## Le meme projet sert de serveur dedie ET de client : on choisit le role au
 ## demarrage. En headless (conteneur Docker) c'est le serveur ; partout ailleurs

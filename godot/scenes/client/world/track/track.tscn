@@ -1,6 +1,5 @@
-[gd_scene load_steps=9 format=3 uid="uid://b6tttrackroot"]
+[gd_scene load_steps=8 format=3 uid="uid://b6tttrackroot"]
 
-[ext_resource type="Script" path="res://scripts/client/world/track/track_root.gd" id="1_root"]
 [ext_resource type="PackedScene" uid="uid://b6ttelgrass" path="res://scenes/client/world/track/elements/grass.tscn" id="2_grass"]
 [ext_resource type="PackedScene" uid="uid://b6ttelasp" path="res://scenes/client/world/track/elements/asphalt.tscn" id="3_asp"]
 [ext_resource type="PackedScene" uid="uid://b6tteldirt" path="res://scenes/client/world/track/elements/dirt.tscn" id="4_dirt"]
@@ -10,7 +9,6 @@
 [ext_resource type="PackedScene" uid="uid://b6tteldecor" path="res://scenes/client/world/track/elements/decorations_layer.tscn" id="8_decor"]
 
 [node name="Track" type="Node2D"]
-script = ExtResource("1_root")
 
 [node name="Grass" parent="." instance=ExtResource("2_grass")]
 

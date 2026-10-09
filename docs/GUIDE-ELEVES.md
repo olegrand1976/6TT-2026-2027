@@ -521,9 +521,15 @@ scenes/main.tscn (Main)
 ├── Net       scripts/network/net.gd   TOUJOURS — RPC + boucle 30 Hz
 ├── Server    scripts/server/server.gd si rôle serveur
 └── Client    scenes/client/client.tscn si rôle client
-    ├── World (track/elements · car/parts → car_view × N)
-    ├── FollowCamera · HUD
+    ├── World (Track · CarsLayer · FollowCamera — scènes sans glue inutile)
+    └── HUD
 ```
+
+Piste : une scène par matériau (`track/elements/*.tscn`) + **`track_element.gd`**
+(`kind`, textures, nœuds `Polygon2D` / `Line2D` / `Sprite2D`). Voiture :
+`car_view.tscn` + pièces **`parts/*.tscn`** (sprites seuls) + **`car_view.gd`**.
+
+Lecture détaillée du code Godot : **[docs/CODE-GODOT.md](CODE-GODOT.md)** (inclut le **plan de travail** : commit refactor, dettes `CarSpecs` / kerbs, LSP).
 
 ### Règle d’or : chemin du nœud `Net`
 

@@ -1,7 +1,11 @@
-## Collisions arcade côté serveur (voitures + obstacles de piste).
+## Collisions arcade — **serveur uniquement**, après chaque `CarPhysics.step`.
+##
+## Les obstacles viennent des scènes client (`track.tscn` + marqueurs Collision).
+## Le client affiche ; le serveur instancie la piste une fois pour les lire.
 class_name TrackCollision
 extends RefCounted
 
+## Hitbox voiture simplifiée (cercle). À rapprocher de `CarSpecs` plus tard.
 const CAR_RADIUS := 13.0
 const CAR_CAR_PASSES := 2
 const TRACK_SCENE := preload("res://scenes/client/world/track/track.tscn")

@@ -1,8 +1,12 @@
-// Backend projet-6TT : API temps reel du jeu de course.
+// Backend projet-6TT — API HTTP (Postgres + Redis).
 //
-// Expose l'etat de sante de la stack (Postgres + pgvector, Redis) et une
-// demonstration de chacune des deux briques : recherche vectorielle cote
-// Postgres, compteurs de telemetrie cote Redis.
+// Le multijoueur temps réel du jeu passe par Godot (WebSocket), pas par ce serveur.
+// Ce binaire sert surtout à :
+//   - /api/health     état Postgres + Redis (utilisé par le frontend Nuxt)
+//   - /api/telemetry  exemple Redis
+//   - /api/similar    exemple pgvector
+//
+// Un seul fichier volontairement (cours) : pas de duplication avec la physique Godot.
 package main
 
 import (

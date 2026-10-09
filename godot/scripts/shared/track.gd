@@ -1,7 +1,9 @@
-## Geometrie du circuit : un anneau elliptique.
+## Géométrie du circuit (anneau elliptique) — **sans état**, partagée client/serveur.
 ##
-## Purement mathematique et sans etat, donc utilisable a l'identique par le
-## serveur (collisions, hors-piste) et par le client (rendu).
+## Toute la piste est centrée en (0, 0). Le serveur appelle `is_on_asphalt` et
+## les rebords ; le client s'en sert pour dessiner ellipses et grille de départ.
+##
+## Modifier OUTER/INNER ici change gameplay **et** rendu (garder les scènes cohérentes).
 class_name Track
 extends RefCounted
 

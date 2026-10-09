@@ -1,10 +1,15 @@
-## Client de jeu : connexion WebSocket, entrees joueur, orchestration des scènes.
+## Client de jeu : WebSocket, clavier, caméra, HUD.
 ##
-## Le rendu est decoupe en sous-scènes (`world/` inclut piste + caméra, `ui/`).
+## Ne simule pas la physique : lit `Net.remote_cars` et lisse l'affichage.
+## Scènes : `World/` (piste + voitures + caméra), `HUD/` (texte).
+##
+## Groupe `rac6tt_client` : retrouvé par `cars_layer.gd`.
 class_name Rac6ttClient
 extends Node2D
 
+## Port hôte par défaut (Docker mappe 6604 → godot:8999). Web : même origine `/ws`.
 const DEFAULT_PORT := 6604
+## Reconnexion automatique si le serveur est down.
 const RETRY_SECONDS := 3.0
 
 @onready var _net: Node = get_parent().get_node("Net")
@@ -92,6 +97,7 @@ func _update_connection(delta: float) -> void:
 		_try_connect()
 
 
+## URL WebSocket : desktop (env ou localhost) vs navigateur (Caddy `/ws`).
 func _server_url() -> String:
 	if not OS.has_feature("web"):
 		var override := OS.get_environment("GAME_WS_URL")
@@ -133,6 +139,7 @@ func _process(delta: float) -> void:
 	_hud.set_status_text(_hud_text(me))
 
 
+## Interpolation visuelle uniquement (le serveur reste la vérité).
 func _update_smoothing(delta: float) -> void:
 	var weight := clampf(delta * 18.0, 0.0, 1.0)
 	for peer_id in _net.remote_cars:

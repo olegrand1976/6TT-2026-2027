@@ -1,4 +1,6 @@
-## Interface tête haute (CanvasLayer indépendant du monde).
+## HUD texte — CanvasLayer au-dessus du monde (non affecté par la caméra 2D).
+##
+## `client.gd` met à jour le libellé chaque frame (connexion, tours, vitesse).
 class_name Rac6ttHud
 extends CanvasLayer
 

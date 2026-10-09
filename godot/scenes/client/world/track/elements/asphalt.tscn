@@ -1,10 +1,14 @@
 [gd_scene load_steps=3 format=3 uid="uid://b6ttelasp"]
 
-[ext_resource type="Script" path="res://scripts/client/world/track/elements/asphalt.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/client/world/track/track_element.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/track/asphalt.png" id="2_tex"]
 
 [node name="Asphalt" type="Node2D"]
 script = ExtResource("1")
+kind = 1
+render_layer = -25
+ellipse_kind = 1
+ellipse_radii = Vector2(560, 340)
 surface_texture = ExtResource("2_tex")
 
 [node name="Polygon2D" type="Polygon2D" parent="."]

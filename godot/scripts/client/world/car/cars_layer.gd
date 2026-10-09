@@ -1,3 +1,9 @@
+## Couche d'affichage des voitures : une instance `car_view.tscn` par pilote connecté.
+##
+## Lit `Net.remote_cars` (rempli par le RPC `snapshot`) et positionne chaque vue
+## avec la position **lissée** du client (`Rac6ttClient.smoothed_position`).
+##
+## Scène : `scenes/client/world/car/cars_layer.tscn` (souvent sous World).
 extends Node2D
 
 const CAR_VIEW_SCENE: PackedScene = preload("res://scenes/client/world/car/car_view.tscn")
@@ -35,6 +41,7 @@ func _sync_views() -> void:
 		view.sync_transform(_client.smoothed_position(car), car.heading)
 		view.update_appearance(car, peer_id == local_id)
 
+	# Pilote parti : retirer la voiture fantôme.
 	for peer_id in _views.keys():
 		if not seen.has(peer_id):
 			(_views[peer_id] as Node).queue_free()
