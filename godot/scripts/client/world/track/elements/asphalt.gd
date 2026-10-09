@@ -8,6 +8,5 @@ const DEFAULT_TEXTURE := preload("res://assets/track/asphalt.png")
 func _ready() -> void:
 	z_index = -25
 	var tex := surface_texture if surface_texture != null else DEFAULT_TEXTURE
-	_poly.texture = tex
-	_poly.polygon = Track.ellipse_points(Track.OUTER)
+	TrackElement.bind_ellipse_polygon(_poly, tex, Track.OUTER)
 	apply_modulate(_poly, Track.ASPHALT)

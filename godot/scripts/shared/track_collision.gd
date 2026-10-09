@@ -43,7 +43,7 @@ static func resolve_tick(cars: Dictionary, obstacles: Array[TrackObstacle]) -> v
 				TrackObstacle.Kind.SEGMENT:
 					_push_segment(car, obs)
 				_:
-					pass
+					assert(false, "TrackObstacle kind inattendu : %d" % int(obs.kind))
 		CarPhysics.enforce_track_bounds(car)
 
 

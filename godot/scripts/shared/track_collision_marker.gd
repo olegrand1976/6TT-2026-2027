@@ -26,7 +26,7 @@ func to_obstacle() -> TrackObstacle:
 		Shape.SEGMENT:
 			obs.kind = TrackObstacle.Kind.SEGMENT
 			obs.segment_length = _scaled_segment_length()
-			obs.segment_thickness = segment_thickness
+			obs.segment_thickness = _scaled_segment_thickness()
 	return obs
 
 
@@ -42,6 +42,15 @@ func _scaled_segment_length() -> float:
 		if len_val != null:
 			return float(len_val)
 	return segment_length * _parent_scale_factor()
+
+
+func _scaled_segment_thickness() -> float:
+	var parent := get_parent()
+	if parent != null:
+		var thick_val = parent.get("thickness")
+		if thick_val != null:
+			return float(thick_val)
+	return segment_thickness * _parent_scale_factor()
 
 
 func _parent_scale_factor() -> float:

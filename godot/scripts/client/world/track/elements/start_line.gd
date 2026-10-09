@@ -9,8 +9,10 @@ func _ready() -> void:
 	z_index = -21
 	var tex := surface_texture if surface_texture != null else DEFAULT_TEXTURE
 	_sprite.texture = tex
+	_sprite.centered = true
 	var width := Track.OUTER.x - Track.INNER.x
 	var size := TrackElement.texture_size(tex)
-	_sprite.scale = Vector2(width / size.x, 1.0)
-	_sprite.position = Vector2(Track.INNER.x + width * 0.5, 0.0)
+	const LINE_WIDTH := 4.0
+	_sprite.scale = Vector2(width / size.x, LINE_WIDTH / size.y)
+	_sprite.position = Vector2((Track.INNER.x + Track.OUTER.x) * 0.5, 0.0)
 	apply_modulate(_sprite, Color.WHITE)

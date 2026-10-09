@@ -10,6 +10,7 @@ const DEFAULT_TEXTURE := preload("res://assets/track/wall.png")
 
 func _ready() -> void:
 	var tex := surface_texture if surface_texture != null else DEFAULT_TEXTURE
+	_sprite.centered = true
 	_sprite.texture = tex
 	var size := TrackElement.texture_size(tex)
 	_sprite.scale = Vector2(length / size.x, thickness / size.y)

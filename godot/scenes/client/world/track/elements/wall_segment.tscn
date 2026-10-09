@@ -12,5 +12,3 @@ surface_texture = ExtResource("2_tex")
 
 [node name="Collision" parent="." instance=ExtResource("3_col")]
 shape = 1
-segment_length = 80.0
-segment_thickness = 14.0

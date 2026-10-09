@@ -19,7 +19,7 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	if _client == null:
+	if _client == null or _net == null:
 		return
 	_sync_views()
 
