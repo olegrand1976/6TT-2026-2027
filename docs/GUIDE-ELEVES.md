@@ -449,6 +449,11 @@ Voir [§11 Frontend Nuxt](#11-frontend-nuxt).
   - `./godot` → `/project` : scènes, scripts, `project.godot`, cache `.godot/`
     (tout ce que vous enregistrez dans l’éditeur est sur le disque hôte)
   - `./godot/.docker/editor-home` → prefs éditeur (langue, disposition des panneaux)
+  - `./exemples/godot` → **`/exemples-godot`** (pas sous `res://` du jeu Rac6TT)
+- **F5 (jouer) dans noVNC** : le client utilise `GAME_WS_URL=ws://godot:8999` pour
+  joindre le conteneur **`godot`** (obligatoire : service `godot` **Up**). Sans ça :
+  HUD « serveur injoignable », **0 pilote**, pas de voiture.
+- Éditeur **hôte** (hors Docker) : pas de `GAME_WS_URL` → `ws://127.0.0.1:6604`.
 - Dans `.env`, aligner `HOST_UID` / `HOST_GID` sur `id -u` / `id -g` pour que les
   fichiers créés restent modifiables hors Docker
 - Dev labo uniquement (VNC sans mot de passe)

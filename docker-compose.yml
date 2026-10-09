@@ -188,6 +188,8 @@ services:
       EDITOR_HOME: /editor-home
       HOST_UID: ${HOST_UID:-1000}
       HOST_GID: ${HOST_GID:-1000}
+      # F5 dans l'editeur : joindre le service godot sur le reseau Compose (pas localhost)
+      GAME_WS_URL: "ws://godot:8999"
       # Verrou numerique X11 : on | off | toggle (defaut on = pave numerique chiffres)
       EDITOR_NUMLOCK: ${EDITOR_NUMLOCK:-on}
     volumes:

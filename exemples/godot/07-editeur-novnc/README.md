@@ -18,15 +18,16 @@ Utiliser l’**éditeur Godot dans le navigateur** (Xvfb + noVNC), persistance d
    http://localhost:6606/vnc.html?autoconnect=true&resize=scale  
    (plein écran, interface **française**).
 2. Dans noVNC : **Scaling mode → Local scaling** si le canvas est coupé.
-3. Ouvrir un **autre** projet d’exemple :
-   - **Fichier → Ouvrir** → chemin hôte  
-     `…/projet-6TT/exemples/godot/05-mouvement-2d`
-4. Vérifier la persistance : créer un nœud, sauver — le fichier apparaît dans `./godot/` **uniquement** si vous éditez le projet monté en `/project` (Rac6TT principal). Pour les mini-projets sous `exemples/`, éditez depuis l’hôte ou montez le chemin voulu (doc avancée).
-5. Aligner les droits dans `.env` :
+3. **Tester Rac6TT (F5)** : conteneur `godot` démarré ; le HUD doit passer à « en piste »
+   (connexion via `ws://godot:8999` dans l’éditeur Docker, pas `localhost:6604`).
+4. Ouvrir un **autre** projet d’exemple : **Projet → Ouvrir…** →  
+   `/exemples-godot/05-mouvement-2d` (dans noVNC).
+5. Vérifier la persistance : créer un nœud, sauver — le fichier apparaît dans `./godot/` **uniquement** si vous éditez le projet monté en `/project` (Rac6TT principal). Pour les mini-projets sous `exemples/`, éditez depuis l’hôte ou montez le chemin voulu (doc avancée).
+6. Aligner les droits dans `.env` :
    ```bash
    id -u && id -g   # → HOST_UID / HOST_GID
    ```
-6. Fichiers copiés à la main dans `godot/` : **Projet → Recharger** ou `docker compose restart godot-editor`.
+7. Fichiers copiés à la main dans `godot/` : **Projet → Recharger** ou `docker compose restart godot-editor`.
 
 ## Critères de réussite
 

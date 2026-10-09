@@ -141,10 +141,13 @@ func _update_connection(delta: float) -> void:
 ## /ws vers le serveur Godot) : un seul port est ouvert par le navigateur, ce qui
 ## evite les blocages sur une connexion vers un autre port. `?port=NNNN` force au
 ## besoin une connexion directe au serveur de jeu, utile pour diagnostiquer.
-## Hors navigateur (editeur, ligne de commande), on vise directement le port
-## publie sur la machine locale.
+## Hors navigateur : port publie sur l'hote (6604) ou `GAME_WS_URL` (editeur
+## noVNC dans Docker → ws://godot:8999, car 127.0.0.1 est le conteneur editeur).
 func _server_url() -> String:
 	if not OS.has_feature("web"):
+		var override := OS.get_environment("GAME_WS_URL")
+		if override != "":
+			return override
 		return "ws://127.0.0.1:%d" % DEFAULT_PORT
 
 	var forced := str(JavaScriptBridge.eval(

@@ -1,18 +1,6 @@
 [gd_scene format=3 uid="uid://crn5br18ctoy1"]
 
 [ext_resource type="Script" uid="uid://p8surmoph4rk" path="res://main.gd" id="1_main"]
-[ext_resource type="Texture2D" uid="uid://by3lacstnnt7g" path="res://ground.png" id="2_0xm2m"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_akiqj"]
-size = Vector2(40, 39)
-
-[node name="Niveau" type="Node" unique_id=997062852]
+[node name="Main" type="Node" unique_id=997062852]
 script = ExtResource("1_main")
-
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=787526097]
-position = Vector2(692, 370)
-texture = ExtResource("2_0xm2m")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D" unique_id=584221107]
-position = Vector2(10, 9.5)
-shape = SubResource("RectangleShape2D_akiqj")
