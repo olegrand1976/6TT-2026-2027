@@ -65,6 +65,15 @@ Dupliquer `resources/cars/default_car.tres` → `sport.tres`, assigner sur une v
 
 **Limite assumée** : ne pas dupliquer la logique physique dans chaque pièce ; un futur `CarProfile` serveur pourra réutiliser la même Resource ou un `.tres` miroir.
 
+## Collisions (serveur)
+
+- Autorité : `TrackCollision.resolve_tick()` après chaque pas `CarPhysics.step()` dans `net.gd`.
+- **Voiture ↔ voiture** : cercles (`CAR_RADIUS`).
+- **Voiture ↔ décor** : marqueurs `TrackCollisionMarker` sur `tree`, `rock`, `wall_segment` (enfant `Collision/`).
+- Déplacer un arbre dans `track.tscn` met à jour la collision au prochain démarrage serveur (re-scan de la scène instanciée dans l’arbre Godot).
+- Les positions des marqueurs utilisent `global_transform` : ne pas collecter les obstacles hors SceneTree.
+- Bitume / herbe : toujours `Track.is_on_asphalt()` + rebords elliptiques (`CarPhysics.enforce_track_bounds`).
+
 Règle RPC : **`Net` = `/root/Main/Net`**.
 
 Doc : [docs/GUIDE-ELEVES.md](../docs/GUIDE-ELEVES.md) §9.

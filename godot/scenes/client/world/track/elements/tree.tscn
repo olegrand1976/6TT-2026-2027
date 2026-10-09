@@ -1,10 +1,15 @@
-[gd_scene load_steps=3 format=3 uid="uid://b6tteltree"]
+[gd_scene load_steps=4 format=3 uid="uid://b6tteltree"]
 
 [ext_resource type="Script" path="res://scripts/client/world/track/elements/tree.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/track/tree.png" id="2_tex"]
+[ext_resource type="PackedScene" uid="uid://b6ttcolmark" path="res://scenes/client/world/track/elements/collision_marker.tscn" id="3_col"]
 
 [node name="Tree" type="Node2D"]
 script = ExtResource("1")
 surface_texture = ExtResource("2_tex")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="Collision" parent="." instance=ExtResource("3_col")]
+position = Vector2(0, -42)
+radius = 26.0

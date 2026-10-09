@@ -54,8 +54,13 @@ static func step(car: CarState, input: Vector2, dt: float, specs: CarSpecs = nul
 	)
 
 	car.pos += Vector2(cos(car.heading), sin(car.heading)) * car.speed * dt
-	_keep_inside(car)
+	enforce_track_bounds(car)
 	car.update_lap()
+
+
+## Limites extérieures / intérieures du terrain de jeu.
+static func enforce_track_bounds(car: CarState) -> void:
+	_keep_inside(car)
 
 
 ## Rails : la voiture peut mordre l'herbe, mais pas quitter la zone de jeu.

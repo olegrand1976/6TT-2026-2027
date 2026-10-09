@@ -29,6 +29,8 @@ var local_input := Vector2.ZERO
 
 var _accumulator := 0.0
 var _tick := 0
+var _obstacles: Array[TrackObstacle] = []
+var _obstacles_loaded := false
 
 
 func _process(delta: float) -> void:
@@ -61,10 +63,20 @@ func reserve_grid_slot(peer_id: int) -> void:
 	_grid_index[peer_id] = _grid_index.size()
 
 
+func ensure_obstacles_loaded() -> void:
+	if _obstacles_loaded or not is_server:
+		return
+	_obstacles = TrackCollision.load_obstacles_from_track()
+	_obstacles_loaded = true
+	print("[6TT] obstacles piste : %d marqueur(s)" % _obstacles.size())
+
+
 func _server_tick() -> void:
 	_tick += 1
+	ensure_obstacles_loaded()
 	for peer_id in cars:
 		CarPhysics.step(cars[peer_id], _inputs.get(peer_id, Vector2.ZERO), STEP)
+	TrackCollision.resolve_tick(cars, _obstacles)
 
 	if cars.is_empty():
 		return
