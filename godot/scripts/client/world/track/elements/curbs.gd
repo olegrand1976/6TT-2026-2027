@@ -8,6 +8,12 @@ const DEFAULT_TEXTURE := preload("res://assets/track/kerb.png")
 
 func _ready() -> void:
 	z_index = -22
+	_apply_surface()
+
+
+func _apply_surface() -> void:
+	if not is_node_ready():
+		return
 	var tex := surface_texture if surface_texture != null else DEFAULT_TEXTURE
 	for line in [_outer, _inner]:
 		line.texture = tex

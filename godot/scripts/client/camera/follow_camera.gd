@@ -11,4 +11,5 @@ func _ready() -> void:
 
 
 func follow_world_position(world_pos: Vector2) -> void:
-	global_position = world_pos
+	# Même repère que Track / CarsLayer (parent attendu : World).
+	position = world_pos

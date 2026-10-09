@@ -16,4 +16,4 @@ func _draw() -> void:
 	var half := Track.OUTER * 2.4
 	var rect := Rect2(-half, half * 2.0)
 	var col := Color.WHITE if use_track_default else surface_color
-	draw_texture_rect(tex, rect, true, col)
+	TrackElement.draw_world_tiled_rect(self, tex, rect, col)

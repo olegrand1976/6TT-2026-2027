@@ -8,7 +8,7 @@ const DEFAULT_PORT := 6604
 const RETRY_SECONDS := 3.0
 
 @onready var _net: Node = get_parent().get_node("Net")
-@onready var _follow_camera = $FollowCamera
+@onready var _follow_camera: Rac6ttFollowCamera = $World/FollowCamera
 @onready var _hud: Rac6ttHud = $HUD
 
 var _peer: WebSocketMultiplayerPeer
