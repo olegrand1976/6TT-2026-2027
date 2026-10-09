@@ -1,0 +1,27 @@
+[gd_scene load_steps=9 format=3 uid="uid://b6tttrackroot"]
+
+[ext_resource type="Script" path="res://scripts/client/world/track/track_root.gd" id="1_root"]
+[ext_resource type="PackedScene" uid="uid://b6ttelgrass" path="res://scenes/client/world/track/elements/grass.tscn" id="2_grass"]
+[ext_resource type="PackedScene" uid="uid://b6ttelasp" path="res://scenes/client/world/track/elements/asphalt.tscn" id="3_asp"]
+[ext_resource type="PackedScene" uid="uid://b6tteldirt" path="res://scenes/client/world/track/elements/dirt.tscn" id="4_dirt"]
+[ext_resource type="PackedScene" uid="uid://b6ttelcurb" path="res://scenes/client/world/track/elements/curbs.tscn" id="5_curb"]
+[ext_resource type="PackedScene" uid="uid://b6ttelstart" path="res://scenes/client/world/track/elements/start_line.tscn" id="6_start"]
+[ext_resource type="PackedScene" uid="uid://b6ttelwalls" path="res://scenes/client/world/track/elements/walls_layer.tscn" id="7_walls"]
+[ext_resource type="PackedScene" uid="uid://b6tteldecor" path="res://scenes/client/world/track/elements/decorations_layer.tscn" id="8_decor"]
+
+[node name="Track" type="Node2D"]
+script = ExtResource("1_root")
+
+[node name="Grass" parent="." instance=ExtResource("2_grass")]
+
+[node name="Asphalt" parent="." instance=ExtResource("3_asp")]
+
+[node name="Dirt" parent="." instance=ExtResource("4_dirt")]
+
+[node name="Curbs" parent="." instance=ExtResource("5_curb")]
+
+[node name="StartLine" parent="." instance=ExtResource("6_start")]
+
+[node name="Walls" parent="." instance=ExtResource("7_walls")]
+
+[node name="Decorations" parent="." instance=ExtResource("8_decor")]

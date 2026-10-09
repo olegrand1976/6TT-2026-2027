@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b6ttcarpwheel"]
+
+[ext_resource type="Script" path="res://scripts/client/world/car/parts/wheels.gd" id="1"]
+
+[node name="Wheels" type="Node2D"]
+script = ExtResource("1")

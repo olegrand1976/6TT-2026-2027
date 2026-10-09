@@ -123,7 +123,7 @@ Exemples et détails → [Guide élèves §10](docs/GUIDE-ELEVES.md#10-api-backe
 
 ## Jeu Godot (aperçu)
 
-Un seul projet, deux rôles (`main.gd`) : headless → serveur, sinon client.
+Un seul projet, deux rôles (`godot/scripts/main.gd`) : headless → serveur, sinon client. Arbre scènes : [godot/README.md](godot/README.md).
 
 ```text
 Main → Net (toujours) + Server | Client

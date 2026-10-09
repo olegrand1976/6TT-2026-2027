@@ -38,6 +38,6 @@ Pratiquer **CharacterBody2D**, gravité, sauts et plateformes avant la course Ra
 
 ## Lien Rac6TT
 
-Physique arcade multijoueur : [`godot/shared/car_physics.gd`](../../../godot/shared/car_physics.gd) (autorité serveur, pas de gravité).
+Physique arcade multijoueur : [`godot/scripts/shared/car_physics.gd`](../../../godot/scripts/shared/car_physics.gd) (autorité serveur, pas de gravité).
 
 Ce module remplace l’ancien dossier `godot/scenes_tests_exemples/`.

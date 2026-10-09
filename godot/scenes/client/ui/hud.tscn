@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://b6tthud"]
+
+[ext_resource type="Script" path="res://scripts/client/ui/hud.gd" id="1_hud"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="Margin" type="MarginContainer" parent="."]
+offset_right = 640.0
+offset_bottom = 200.0
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 14
+
+[node name="StatusLabel" type="Label" parent="Margin"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.886275, 0.909804, 0.941176, 1)
+theme_override_colors/font_outline_color = Color(0.0431373, 0.054902, 0.0784314, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 16
+text = "projet-6TT"

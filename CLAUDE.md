@@ -75,14 +75,14 @@ déjà dans l’image).
 
 ## Le projet Godot
 
-Un projet, deux rôles ([godot/main.gd](godot/main.gd)) : headless → Server,
-sinon Client. Forçage : `-- --server` / `-- --client`.
+Un projet, deux rôles ([godot/scripts/main.gd](godot/scripts/main.gd)) : headless → Server,
+sinon Client. Forçage : `-- --server` / `-- --client`. Voir [godot/README.md](godot/README.md).
 
 ```text
-main.tscn (Main)
-├── Net       net.gd — RPC + boucle 30 Hz   (TOUJOURS, chemin /root/Main/Net)
-├── Server    server.gd
-└── Client    client.gd
+scenes/main.tscn (Main)
+├── Net       scripts/network/net.gd — RPC + boucle 30 Hz   (TOUJOURS, /root/Main/Net)
+├── Server    scripts/server/server.gd
+└── Client    scenes/client/client.tscn (World/track/cars, FollowCamera, HUD)
 ```
 
 **`Net` doit rester à `/root/Main/Net` des deux côtés.** Écart = RPC silencieux.

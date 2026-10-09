@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b6ttnetscene"]
+
+[ext_resource type="Script" path="res://scripts/network/net.gd" id="1_net"]
+
+[node name="Net" type="Node"]
+script = ExtResource("1_net")

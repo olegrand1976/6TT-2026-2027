@@ -1,0 +1,22 @@
+[gd_scene load_steps=7 format=3 uid="uid://b6ttcarview"]
+
+[ext_resource type="Script" path="res://scripts/client/world/car/car_view.gd" id="1_car"]
+[ext_resource type="Resource" path="res://resources/cars/default_car.tres" id="2_specs"]
+[ext_resource type="PackedScene" uid="uid://b6ttcarpbody" path="res://scenes/client/world/car/parts/body.tscn" id="3_body"]
+[ext_resource type="PackedScene" uid="uid://b6ttcarpnose" path="res://scenes/client/world/car/parts/nose.tscn" id="4_nose"]
+[ext_resource type="PackedScene" uid="uid://b6ttcarpwheel" path="res://scenes/client/world/car/parts/wheels.tscn" id="5_wheels"]
+[ext_resource type="PackedScene" uid="uid://b6ttcarpring" path="res://scenes/client/world/car/parts/local_ring.tscn" id="6_ring"]
+
+[node name="CarView" type="Node2D"]
+script = ExtResource("1_car")
+specs = ExtResource("2_specs")
+
+[node name="Parts" type="Node2D" parent="."]
+
+[node name="Body" parent="Parts" instance=ExtResource("3_body")]
+
+[node name="Nose" parent="Parts" instance=ExtResource("4_nose")]
+
+[node name="Wheels" parent="Parts" instance=ExtResource("5_wheels")]
+
+[node name="LocalRing" parent="Parts" instance=ExtResource("6_ring")]

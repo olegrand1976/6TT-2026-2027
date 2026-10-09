@@ -250,11 +250,10 @@ projet-6TT/
 ├── godot/
 │   ├── Dockerfile            # barichello/godot-ci:4.7.2
 │   ├── project.godot
-│   ├── main.tscn / main.gd   # choix serveur | client
-│   ├── net.gd                # RPC + tick 30 Hz
-│   ├── server/server.gd
-│   ├── client/               # rendu, HUD, reconnexion
-│   ├── shared/               # physique, track, CarState
+│   ├── README.md             # arbre scènes / scripts
+│   ├── scenes/               # .tscn (main, net, server, client…)
+│   ├── scripts/              # .gd (même découpage + shared/)
+│   ├── assets/               # textures
 │   ├── Caddyfile             # utilisé par le service webclient
 │   ├── export-web.sh
 │   ├── export_presets.cfg
@@ -511,17 +510,19 @@ pas un serveur HTTP.
 
 ### Un projet, deux rôles
 
-[`godot/main.gd`](../godot/main.gd) décide :
+[`godot/scripts/main.gd`](../godot/scripts/main.gd) décide :
 
 - pas d’affichage (`DisplayServer` = headless) → **Server**
 - sinon → **Client**
 - forçage : `-- --server` ou `-- --client`
 
 ```text
-main.tscn (Main)
-├── Net       net.gd      TOUJOURS — RPC + boucle 30 Hz
-├── Server    server.gd   si rôle serveur
-└── Client    client.gd   si rôle client
+scenes/main.tscn (Main)
+├── Net       scripts/network/net.gd   TOUJOURS — RPC + boucle 30 Hz
+├── Server    scripts/server/server.gd si rôle serveur
+└── Client    scenes/client/client.tscn si rôle client
+    ├── World (track/elements · car/parts → car_view × N)
+    ├── FollowCamera · HUD
 ```
 
 ### Règle d’or : chemin du nœud `Net`
@@ -541,9 +542,9 @@ Si vous déplacez ou renommez `Net` d’un seul côté, les RPC **échouent en s
 
 Code partagé déterministe, sans état de partie :
 
-- [`shared/car_physics.gd`](../godot/shared/car_physics.gd)
-- [`shared/track.gd`](../godot/shared/track.gd) — anneau elliptique
-- [`shared/car_state.gd`](../godot/shared/car_state.gd) — sérialisation wire
+- [`scripts/shared/car_physics.gd`](../godot/scripts/shared/car_physics.gd)
+- [`scripts/shared/track.gd`](../godot/scripts/shared/track.gd) — anneau elliptique
+- [`scripts/shared/car_state.gd`](../godot/scripts/shared/car_state.gd) — sérialisation wire
 
 Tours : **angle polaire cumulé** autour du centre (pas de ligne d’arrivée) —
 fonctionne dans les deux sens de rotation.

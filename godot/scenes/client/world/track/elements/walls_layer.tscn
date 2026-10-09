@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b6ttelwalls"]
+
+[ext_resource type="Script" path="res://scripts/client/world/track/elements/walls_layer.gd" id="1"]
+
+[node name="Walls" type="Node2D"]
+script = ExtResource("1")

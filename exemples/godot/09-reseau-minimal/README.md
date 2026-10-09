@@ -2,7 +2,7 @@
 
 ## Objectif
 
-Comprendre **WebSocketMultiplayerPeer**, le nœud **`Net` au même chemin**, RPC client → serveur → broadcast, avant d’ouvrir [`godot/net.gd`](../../../godot/net.gd).
+Comprendre **WebSocketMultiplayerPeer**, le nœud **`Net` au même chemin**, RPC client → serveur → broadcast, avant d’ouvrir [`godot/scripts/network/net.gd`](../../../godot/scripts/network/net.gd).
 
 ## Prérequis
 
@@ -40,4 +40,4 @@ Comprendre **WebSocketMultiplayerPeer**, le nœud **`Net` au même chemin**, RPC
 
 ## Lien Rac6TT
 
-[`godot/main.gd`](../../../godot/main.gd) · [`godot/net.gd`](../../../godot/net.gd) · [`godot/server/server.gd`](../../../godot/server/server.gd) · [`godot/client/client.gd`](../../../godot/client/client.gd).
+[`godot/scripts/main.gd`](../../../godot/scripts/main.gd) · [`godot/scripts/network/net.gd`](../../../godot/scripts/network/net.gd) · [`godot/scripts/server/server.gd`](../../../godot/scripts/server/server.gd) · [`godot/scripts/client/client.gd`](../../../godot/scripts/client/client.gd).

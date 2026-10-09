@@ -115,7 +115,7 @@ Deux URL Nuxt (`NUXT_INTERNAL_API_URL` vs `NUXT_PUBLIC_API_URL`), route `status.
 
 **Lancement :** `godot --path exemples/godot/08-course-locale -e --language fr`
 
-**Lien Rac6TT :** même géométrie de piste et physique que `godot/shared/` — le jeu complet déplace l’autorité sur le serveur.
+**Lien Rac6TT :** même géométrie de piste et physique que `godot/scripts/shared/` — le jeu complet déplace l’autorité sur le serveur.
 
 ---
 
@@ -128,7 +128,7 @@ Deux URL Nuxt (`NUXT_INTERNAL_API_URL` vs `NUXT_PUBLIC_API_URL`), route `status.
 **Lancement serveur :** `cd exemples/godot/09-reseau-minimal && docker compose up -d server`  
 **Client :** `godot --path exemples/godot/09-reseau-minimal -- --client` (2 fenêtres pour tester)
 
-**Lien Rac6TT :** même idée que `godot/net.gd` — autorité serveur, instantanés, pas de triche côté client.
+**Lien Rac6TT :** même idée que `godot/scripts/network/net.gd` — autorité serveur, instantanés, pas de triche côté client.
 
 ---
 

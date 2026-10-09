@@ -20,7 +20,7 @@ Piloter une voiture sur la **piste elliptique** Rac6TT en local : `Track`, `CarS
    ```
 2. **F5** — flèches haut/bas = gaz/frein, gauche/droite = direction.
 3. Comparer avec le schéma [`../_assets/autorite-serveur.svg`](../../_assets/autorite-serveur.svg) : ici **vous** simulez (pas encore le serveur).
-4. Lire [`shared/car_physics.gd`](shared/car_physics.gd) et le fichier équivalent Rac6TT [`godot/shared/car_physics.gd`](../../../godot/shared/car_physics.gd).
+4. Lire [`shared/car_physics.gd`](shared/car_physics.gd) et le fichier équivalent Rac6TT [`godot/scripts/shared/car_physics.gd`](../../../godot/scripts/shared/car_physics.gd).
 
 ## Critères de réussite
 
@@ -33,4 +33,4 @@ Piloter une voiture sur la **piste elliptique** Rac6TT en local : `Track`, `CarS
 
 ## Lien Rac6TT
 
-Même géométrie que [`godot/shared/track.gd`](../../../godot/shared/track.gd) · simulation serveur dans [`godot/net.gd`](../../../godot/net.gd).
+Même géométrie que [`godot/scripts/shared/track.gd`](../../../godot/scripts/shared/track.gd) · simulation serveur dans [`godot/scripts/network/net.gd`](../../../godot/scripts/network/net.gd).
