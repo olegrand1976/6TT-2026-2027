@@ -1,6 +1,6 @@
 ## Client de jeu : connexion WebSocket, entrees joueur, orchestration des scènes.
 ##
-## Le rendu est entierement decoupe en sous-scènes (`world/`, `camera/`, `ui/`).
+## Le rendu est decoupe en sous-scènes (`world/` inclut piste + caméra, `ui/`).
 class_name Rac6ttClient
 extends Node2D
 
@@ -74,6 +74,7 @@ func _drop(reason: String) -> void:
 	_retry_in = RETRY_SECONDS
 	_net.remote_cars.clear()
 	_smoothed.clear()
+	_follow_camera.frame_track_center()
 
 
 func _update_connection(delta: float) -> void:
@@ -126,6 +127,8 @@ func _process(delta: float) -> void:
 	var me: CarState = _net.remote_cars.get(local_peer_id())
 	if me != null:
 		_follow_camera.follow_world_position(_smoothed.get(me.peer_id, me.pos))
+	else:
+		_follow_camera.frame_track_center()
 
 	_hud.set_status_text(_hud_text(me))
 

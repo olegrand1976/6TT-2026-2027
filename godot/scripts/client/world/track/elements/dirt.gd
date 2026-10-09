@@ -11,6 +11,8 @@ func _ready() -> void:
 
 
 func _apply_surface() -> void:
+	if _poly == null:
+		return
 	var tex := surface_texture if surface_texture != null else DEFAULT_TEXTURE
 	TrackElement.bind_ellipse_polygon(_poly, tex, Track.INNER)
 	apply_modulate(_poly, Track.DIRT)

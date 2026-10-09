@@ -12,7 +12,7 @@ func _ready() -> void:
 
 
 func _apply_surface() -> void:
-	if not is_node_ready():
+	if _outer == null or _inner == null:
 		return
 	var tex := surface_texture if surface_texture != null else DEFAULT_TEXTURE
 	for line in [_outer, _inner]:
