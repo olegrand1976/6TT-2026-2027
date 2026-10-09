@@ -12,9 +12,13 @@ const DEFAULT_PORT := 6604
 ## Reconnexion automatique si le serveur est down.
 const RETRY_SECONDS := 3.0
 
-@onready var _net: Node = get_parent().get_node("Net")
+## Chemin RPC obligatoire (voir docs/CODE-GODOT.md) — pas `get_parent().Net` seul.
+const NET_PATH := NodePath("/root/Main/Net")
+
 @onready var _follow_camera: Rac6ttFollowCamera = $World/FollowCamera
 @onready var _hud: Rac6ttHud = $HUD
+
+var _net: Node
 
 var _peer: WebSocketMultiplayerPeer
 var _status := "demarrage..."
@@ -30,6 +34,16 @@ func _enter_tree() -> void:
 
 
 func _ready() -> void:
+	_net = get_node_or_null(NET_PATH)
+	if _net == null:
+		_status = "lancer scenes/main.tscn (F5), pas une sous-scene seule"
+		push_error(
+			"[6TT] Net introuvable a %s — jouer le projet (F5) depuis main.tscn, pas F6 sur client/camera/track."
+			% NET_PATH
+		)
+		set_process(false)
+		return
+
 	_net.snapshot_received.connect(_on_first_snapshot, CONNECT_ONE_SHOT)
 
 	multiplayer.connected_to_server.connect(_on_connected)

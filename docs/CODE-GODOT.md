@@ -103,6 +103,20 @@ Après la fusion vers **`track_element.gd`**, le language server peut encore aff
 
 Ne **pas** recréer les anciens `grass.gd` / `tree.gd` avec des `@export` dupliqués : c’était la source du parse error « member already exists ».
 
+### F5 / debug : le jeu ne démarre pas (écran noir, erreurs `Net`)
+
+**Cause la plus fréquente** : lancer une **sous-scène** (`client.tscn`, `follow_camera.tscn`, un `elements/*.tscn`) avec **F6** (*Exécuter la scène actuelle*) ou le bouton play sur la scène ouverte. Le client exige **`/root/Main/Net`** (RPC multijoueur) ; seule **`scenes/main.tscn`** instancie `Main` + `Net` + client.
+
+**Correctif** :
+
+1. Ouvrir `scenes/main.tscn`.
+2. **F5** (*Exécuter le projet*) — pas F6 sur une sous-scène.
+3. Vérifier la scène principale : *Projet → Paramètres du projet → Application → Scène principale* = `res://scenes/main.tscn`.
+4. Serveur WS : stack Docker (`godot` sur **6604** hôte) ou `GAME_WS_URL` dans l’éditeur noVNC (`ws://godot:8999`).
+5. **Vue jeu intégrée** (Godot 4.7) : si rien n’apparaît, basculer la vue jeu en **fenêtre séparée** (icône play / onglet *Jeu*) ou agrandir le panneau *Jeu* sous l’éditeur.
+
+Message attendu si mauvaise scène : `[6TT] Net introuvable à /root/Main/Net`.
+
 ## Plan de travail (maintainers / suite du cours)
 
 Ordre recommandé : **valider le refactor → commit → dettes gameplay / visuel**.

@@ -21,7 +21,9 @@ func _ready() -> void:
 			+ "(ouvrir scenes/main.tscn, pas cars_layer seul)."
 		)
 		return
-	_net = _client.get_parent().get_node("Net")
+	_net = get_node_or_null("/root/Main/Net")
+	if _net == null:
+		push_error("[6TT] CarsLayer : /root/Main/Net absent — lancer main.tscn (F5).")
 
 
 func _process(_delta: float) -> void:
