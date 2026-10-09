@@ -67,3 +67,9 @@ Dupliquer `resources/cars/default_car.tres` → `sport.tres`, assigner sur une v
 Règle RPC : **`Net` = `/root/Main/Net`**.
 
 Doc : [docs/GUIDE-ELEVES.md](../docs/GUIDE-ELEVES.md) §9.
+
+## Éditeur (Godot 4.7)
+
+- Scène principale : `res://scenes/main.tscn` (alias racine `res://main.tscn` pour compat).
+- Scripts : sous `res://scripts/…` — fermer les onglets obsolètes `res://main.gd` ou `res://shared/*`.
+- Si le LSP affiche encore d’anciennes erreurs : **Projet → Recharger le projet courant** ou supprimer le cache local `.godot/` puis rouvrir (réimport ~1 min).

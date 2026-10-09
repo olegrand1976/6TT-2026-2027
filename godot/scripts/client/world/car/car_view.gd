@@ -1,5 +1,5 @@
 ## Assemble les pièces visuelles ; les specs pilotent dimensions et futurs profils.
-class_name CarView
+class_name Rac6ttCarView
 extends Node2D
 
 @export var specs: CarSpecs
